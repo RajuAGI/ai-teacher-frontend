@@ -73,7 +73,7 @@ function speakAnswer() {
   }
 
   speech.rate = 0.85;   // Slightly slow like Indian dialect
-  speech.pitch = 0.5;   // Deep male voice
+  speech.pitch = 0.1;   // Deep male voice
   speech.volume = 1;
 
   window.speechSynthesis.speak(speech);
