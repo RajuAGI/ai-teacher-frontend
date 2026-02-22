@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Teacher</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Teacher Avatar -->
+    <div class="teacher-box">
+      <div class="avatar">🧑‍🏫</div>
+      <h1>AI Teacher</h1>
+      <p class="subtitle">Ask me anything — I'll explain and speak!</p>
+    </div>
+
+    <!-- Input Box -->
+    <div class="input-box">
+      <input type="text" id="questionInput" placeholder="Ask your question here..." />
+      <button onclick="askTeacher()">Ask ➤</button>
+    </div>
+
+    <!-- Answer Box -->
+    <div class="answer-box" id="answerBox">
+      <p id="answerText">Your answer will appear here...</p>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button onclick="speakAnswer()" id="speakBtn" disabled>🔊 Speak Answer</button>
+      <button onclick="stopSpeaking()" id="stopBtn" disabled>⏹ Stop</button>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
