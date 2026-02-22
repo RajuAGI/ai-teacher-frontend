@@ -69,7 +69,7 @@ function speakAnswer() {
   if (maleVoice) speech.voice = maleVoice;
 
   speech.rate = 0.95;
-  speech.pitch = 0.3;
+  speech.pitch = 0.1;
   speech.volume = 1;
 
   window.speechSynthesis.speak(speech);
