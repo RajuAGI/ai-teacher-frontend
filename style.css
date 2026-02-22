@@ -23,9 +23,14 @@ body {
   text-align: center;
 }
 
-.teacher-box .avatar {
-  font-size: 80px;
+.teacher-box .avatar img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #e94560;
   animation: bounce 2s infinite;
+  box-shadow: 0 8px 25px rgba(233, 69, 96, 0.4);
 }
 
 .teacher-box h1 {
