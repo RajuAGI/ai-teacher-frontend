@@ -1,0 +1,135 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  width: 90%;
+  max-width: 650px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  text-align: center;
+}
+
+.teacher-box .avatar {
+  font-size: 80px;
+  animation: bounce 2s infinite;
+}
+
+.teacher-box h1 {
+  font-size: 32px;
+  color: #1a1a2e;
+  margin: 10px 0 5px;
+}
+
+.subtitle {
+  color: #888;
+  font-size: 15px;
+  margin-bottom: 25px;
+}
+
+.input-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.input-box input {
+  flex: 1;
+  padding: 14px 18px;
+  border: 2px solid #ddd;
+  border-radius: 30px;
+  font-size: 15px;
+  outline: none;
+  transition: border 0.3s;
+}
+
+.input-box input:focus {
+  border-color: #e94560;
+}
+
+.input-box button {
+  background: #e94560;
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 30px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.input-box button:hover {
+  background: #c73652;
+}
+
+.answer-box {
+  background: #f4f4f4;
+  border-radius: 15px;
+  padding: 20px;
+  min-height: 120px;
+  text-align: left;
+  margin-bottom: 20px;
+  border-left: 5px solid #e94560;
+}
+
+#answerText {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.7;
+}
+
+.controls {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.controls button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 30px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+#speakBtn {
+  background: #1a1a2e;
+  color: white;
+}
+
+#speakBtn:hover:not(:disabled) {
+  background: #0f3460;
+}
+
+#stopBtn {
+  background: #e94560;
+  color: white;
+}
+
+#stopBtn:hover:not(:disabled) {
+  background: #c73652;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
