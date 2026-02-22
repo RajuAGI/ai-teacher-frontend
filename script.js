@@ -1,4 +1,3 @@
-// ⚠️ Replace this with your Render backend URL after deploying
 const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
 
 let currentAnswer = "";
@@ -24,7 +23,6 @@ async function askTeacher() {
     });
 
     const data = await response.json();
-    console.log("Response from backend:", data);
     currentAnswer = data.answer || data.error || "No answer received";
     answerText.innerText = currentAnswer;
 
@@ -46,13 +44,32 @@ function speakAnswer() {
 
   const speech = new SpeechSynthesisUtterance(currentAnswer);
 
-  // Male voice settings
+  // Force Male voice
+  window.speechSynthesis.onvoiceschanged = () => {
+    const voices = window.speechSynthesis.getVoices();
+    const maleVoice = voices.find(v =>
+      v.name.includes("David") ||
+      v.name.includes("Google UK English Male") ||
+      v.name.includes("Male") ||
+      v.name.includes("Daniel") ||
+      v.name.includes("James")
+    );
+    if (maleVoice) speech.voice = maleVoice;
+  };
+
+  // Try to set voice immediately too (in case voices already loaded)
   const voices = window.speechSynthesis.getVoices();
-  const maleVoice = voices.find(v => v.name.includes("Male") || v.name.includes("David") || v.name.includes("Google UK English Male"));
+  const maleVoice = voices.find(v =>
+    v.name.includes("David") ||
+    v.name.includes("Google UK English Male") ||
+    v.name.includes("Male") ||
+    v.name.includes("Daniel") ||
+    v.name.includes("James")
+  );
   if (maleVoice) speech.voice = maleVoice;
 
   speech.rate = 0.95;
-  speech.pitch = 0.9;
+  speech.pitch = 0.8;
   speech.volume = 1;
 
   window.speechSynthesis.speak(speech);
