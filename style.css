@@ -24,8 +24,8 @@ body {
 }
 
 .teacher-box .avatar img {
-  width: 120px;
-  height: 120px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   object-fit: cover;
   border: 4px solid #e94560;
