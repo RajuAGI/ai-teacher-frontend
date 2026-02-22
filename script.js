@@ -24,7 +24,8 @@ async function askTeacher() {
     });
 
     const data = await response.json();
-    currentAnswer = data.answer;
+    console.log("Response from backend:", data);
+    currentAnswer = data.answer || data.error || "No answer received";
     answerText.innerText = currentAnswer;
 
     document.getElementById("speakBtn").disabled = false;
