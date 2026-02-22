@@ -1,5 +1,5 @@
 // ⚠️ Replace this with your Render backend URL after deploying
-const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com/";
+const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
 
 let currentAnswer = "";
 
