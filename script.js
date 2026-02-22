@@ -44,36 +44,45 @@ function speakAnswer() {
 
   const speech = new SpeechSynthesisUtterance(currentAnswer);
 
-  // Force Male voice
-  window.speechSynthesis.onvoiceschanged = () => {
-    const voices = window.speechSynthesis.getVoices();
-    const maleVoice = voices.find(v =>
+  const voices = window.speechSynthesis.getVoices();
+
+  // Try to find Indian male voice
+  const indianVoice = voices.find(v =>
+    v.name.includes("Ravi") ||          // Google Hindi Male
+    v.name.includes("Hindi Male") ||
+    v.name.includes("hi-IN") ||
+    v.lang.includes("hi-IN") ||
+    v.name.includes("Google हिन्दी") ||
+    v.name.includes("Indian") ||
+    v.name.includes("hi_IN")
+  );
+
+  if (indianVoice) {
+    speech.voice = indianVoice;
+    speech.lang = "hi-IN";
+  } else {
+    // Fallback — use English with Indian accent settings
+    const englishVoice = voices.find(v =>
       v.name.includes("David") ||
       v.name.includes("Google UK English Male") ||
-      v.name.includes("Male") ||
       v.name.includes("Daniel") ||
       v.name.includes("James")
     );
-    if (maleVoice) speech.voice = maleVoice;
-  };
+    if (englishVoice) speech.voice = englishVoice;
+    speech.lang = "en-IN";  // Indian English accent
+  }
 
-  // Try to set voice immediately too (in case voices already loaded)
-  const voices = window.speechSynthesis.getVoices();
-  const maleVoice = voices.find(v =>
-    v.name.includes("David") ||
-    v.name.includes("Google UK English Male") ||
-    v.name.includes("Male") ||
-    v.name.includes("Daniel") ||
-    v.name.includes("James")
-  );
-  if (maleVoice) speech.voice = maleVoice;
-
-  speech.rate = 0.95;
-  speech.pitch = 0.1;
+  speech.rate = 0.85;   // Slightly slow like Indian dialect
+  speech.pitch = 0.5;   // Deep male voice
   speech.volume = 1;
 
   window.speechSynthesis.speak(speech);
 }
+
+// Handle voices loaded after page load
+window.speechSynthesis.onvoiceschanged = () => {
+  console.log("Voices loaded:", window.speechSynthesis.getVoices().map(v => v.name));
+};
 
 function stopSpeaking() {
   window.speechSynthesis.cancel();
