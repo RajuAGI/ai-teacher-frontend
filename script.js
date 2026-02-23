@@ -8,12 +8,12 @@ async function askTeacher() {
   const question = document.getElementById("questionInput").value.trim();
 
   if (!question) {
-    alert("Please type a question first!");
+    alert("पहले कोई सवाल लिखें!");
     return;
   }
 
   const answerText = document.getElementById("answerText");
-  answerText.innerText = "🤔 Thinking...";
+  answerText.innerText = "🤔 सोच रहा हूं...";
   document.getElementById("speakBtn").disabled = true;
   document.getElementById("stopBtn").disabled = true;
 
@@ -25,35 +25,48 @@ async function askTeacher() {
     });
 
     const data = await response.json();
-    currentAnswer = data.answer || data.error || "No answer received";
+    currentAnswer = data.answer || data.error || "कोई जवाब नहीं मिला";
     answerText.innerText = currentAnswer;
 
     document.getElementById("speakBtn").disabled = false;
     document.getElementById("stopBtn").disabled = false;
 
-    // Auto speak
     speakAnswer();
 
   } catch (error) {
-    answerText.innerText = "❌ Error connecting to AI. Please check your backend.";
+    answerText.innerText = "❌ Backend से connection नहीं हो पाया।";
   }
 }
 
-// Split text into small sentences
 function splitIntoSentences(text) {
   return text.match(/[^।\.!\?]+[।\.!\?]+/g) || [text];
 }
 
-function speakAnswer() {
-  if (!currentAnswer) return;
+function getIndianMaleVoice() {
+  const voices = window.speechSynthesis.getVoices();
 
-  window.speechSynthesis.cancel();
-  currentIndex = 0;
+  // पहले Hindi India voice ढूंढो
+  let voice = voices.find(v => v.lang === "hi-IN");
 
-  // Split answer into small sentences
-  sentences = splitIntoSentences(currentAnswer);
+  // फिर Indian English ढूंढो
+  if (!voice) voice = voices.find(v => v.lang === "en-IN");
 
-  speakNextSentence();
+  // फिर Ravi या Google Hindi ढूंढो
+  if (!voice) voice = voices.find(v =>
+    v.name.includes("Ravi") ||
+    v.name.includes("Google हिन्दी") ||
+    v.name.includes("Hindi")
+  );
+
+  // आखिर में कोई भी male voice
+  if (!voice) voice = voices.find(v =>
+    v.name.includes("David") ||
+    v.name.includes("Daniel") ||
+    v.name.includes("James") ||
+    v.name.includes("Male")
+  );
+
+  return voice;
 }
 
 function speakNextSentence() {
@@ -68,40 +81,25 @@ function speakNextSentence() {
 
   const speech = new SpeechSynthesisUtterance(sentence);
 
-  // Set Indian male voice
-  const voices = window.speechSynthesis.getVoices();
-  const indianVoice = voices.find(v =>
-    v.name.includes("Ravi") ||
-    v.name.includes("Hindi Male") ||
-    v.lang.includes("hi-IN") ||
-    v.name.includes("Indian")
-  );
+  const voice = getIndianMaleVoice();
+  if (voice) speech.voice = voice;
 
-  if (indianVoice) {
-    speech.voice = indianVoice;
+  // Hindi voice मिली तो Hindi lang set करो
+  if (voice && voice.lang === "hi-IN") {
     speech.lang = "hi-IN";
   } else {
-    const englishVoice = voices.find(v =>
-      v.name.includes("David") ||
-      v.name.includes("Google UK English Male") ||
-      v.name.includes("Daniel") ||
-      v.name.includes("James")
-    );
-    if (englishVoice) speech.voice = englishVoice;
-    speech.lang = "en-IN";
+    speech.lang = "en-IN"; // Indian English accent
   }
 
-  speech.rate = 0.85;
-  speech.pitch = 0.8;
+  speech.rate = 0.82;   // थोड़ा धीमा — Indian style
+  speech.pitch = 0.55;  // गहरी आवाज़ — पुरुष जैसी
   speech.volume = 1;
 
-  // जब एक sentence खत्म हो तो अगला शुरू करो
   speech.onend = () => {
     currentIndex++;
     speakNextSentence();
   };
 
-  // अगर कोई error आए तो अगला sentence try करो
   speech.onerror = () => {
     currentIndex++;
     speakNextSentence();
@@ -110,13 +108,22 @@ function speakNextSentence() {
   window.speechSynthesis.speak(speech);
 }
 
+function speakAnswer() {
+  if (!currentAnswer) return;
+
+  window.speechSynthesis.cancel();
+  currentIndex = 0;
+  sentences = splitIntoSentences(currentAnswer);
+  speakNextSentence();
+}
+
 function stopSpeaking() {
   window.speechSynthesis.cancel();
-  currentIndex = sentences.length; // रोक दो
+  currentIndex = sentences.length;
 }
 
 window.speechSynthesis.onvoiceschanged = () => {
-  console.log("Voices loaded:", window.speechSynthesis.getVoices().map(v => v.name));
+  console.log("Available voices:", window.speechSynthesis.getVoices().map(v => `${v.name} (${v.lang})`));
 };
 
 document.addEventListener("DOMContentLoaded", () => {
