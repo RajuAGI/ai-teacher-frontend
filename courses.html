@@ -86,12 +86,12 @@
   </footer>
 
   <script>
-    const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
+              
+const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
     let currentCourse = "";
     let currentTopic = "";
     let currentAudio = null;
 
-    // ===== Default Courses & Topics =====
     const defaultData = {
       "➕ गणित": ["संख्या पद्धति", "जोड़ और घटाव", "गुणा और भाग", "भिन्न", "दशमलव", "प्रतिशत", "Algebra", "ज्यामिति", "त्रिकोणमिति"],
       "🔬 विज्ञान": ["गति और बल", "ऊर्जा", "परमाणु", "कोशिका", "पाचन तंत्र", "सौरमंडल", "रासायनिक अभिक्रिया", "प्रकाश"],
@@ -103,12 +103,9 @@
       "💰 अर्थशास्त्र": ["बाज़ार क्या है", "माँग और पूर्ति", "GDP", "मुद्रास्फीति", "भारतीय बजट"]
     };
 
-    // ===== localStorage से data load करो =====
     function loadData() {
       const saved = localStorage.getItem("courseData");
-      if (saved) {
-        return JSON.parse(saved);
-      }
+      if (saved) return JSON.parse(saved);
       localStorage.setItem("courseData", JSON.stringify(defaultData));
       return defaultData;
     }
@@ -117,12 +114,11 @@
       localStorage.setItem("courseData", JSON.stringify(data));
     }
 
-    // ===== Page 1: Courses दिखाओ =====
+    // ===== Page 1 =====
     function showCourses() {
       const data = loadData();
       const grid = document.getElementById("coursesGrid");
       grid.innerHTML = "";
-
       const colors = ["#e94560", "#0f3460", "#16213e", "#533483", "#e94560", "#1a1a2e", "#0f3460", "#533483"];
 
       Object.keys(data).forEach((course, i) => {
@@ -136,13 +132,13 @@
           <p>${topics.length} Topics उपलब्ध</p>
           <span class="level">▶ शुरू करो</span>
         `;
-        card.onclick = () => goToPage2(course);
+        card.onclick = function() { openCourse(course); };
         grid.appendChild(card);
       });
     }
 
-    // ===== Page 2: Topics दिखाओ =====
-    function goToPage2(course) {
+    // ===== Page 2 =====
+    function openCourse(course) {
       currentCourse = course;
       document.getElementById("page1").style.display = "none";
       document.getElementById("page2").style.display = "block";
@@ -156,6 +152,11 @@
       const grid = document.getElementById("topicsGrid");
       grid.innerHTML = "";
 
+      if (topics.length === 0) {
+        grid.innerHTML = '<p style="color:#aaa;text-align:center;margin-top:30px">कोई topic नहीं है — नया topic जोड़ो!</p>';
+        return;
+      }
+
       topics.forEach((topic, i) => {
         const card = document.createElement("div");
         card.className = "topic-card";
@@ -164,31 +165,19 @@
           <span class="topic-name">${topic}</span>
           <button class="delete-btn" onclick="deleteTopic(${i}, event)">🗑️</button>
         `;
-        card.onclick = () => goToPage3(topic);
+        card.onclick = function() { openTopic(topic); };
         grid.appendChild(card);
       });
-
-      if (topics.length === 0) {
-        grid.innerHTML = '<p style="color:#aaa;text-align:center;margin-top:30px">कोई topic नहीं है — नया topic जोड़ो!</p>';
-      }
     }
 
-    // ===== Topic Add करो =====
     function addTopic() {
       const input = document.getElementById("newTopicInput");
       const newTopic = input.value.trim();
-      if (!newTopic) {
-        alert("Topic का नाम लिखो!");
-        return;
-      }
+      if (!newTopic) { alert("Topic का नाम लिखो!"); return; }
 
       const data = loadData();
       if (!data[currentCourse]) data[currentCourse] = [];
-
-      if (data[currentCourse].includes(newTopic)) {
-        alert("यह topic पहले से है!");
-        return;
-      }
+      if (data[currentCourse].includes(newTopic)) { alert("यह topic पहले से है!"); return; }
 
       data[currentCourse].push(newTopic);
       saveData(data);
@@ -196,19 +185,17 @@
       showTopics();
     }
 
-    // ===== Topic Delete करो =====
     function deleteTopic(index, event) {
       event.stopPropagation();
       if (!confirm("क्या आप यह topic delete करना चाहते हो?")) return;
-
       const data = loadData();
       data[currentCourse].splice(index, 1);
       saveData(data);
       showTopics();
     }
 
-    // ===== Page 3: Topic Detail =====
-    async function goToPage3(topic) {
+    // ===== Page 3 =====
+    async function openTopic(topic) {
       currentTopic = topic;
       document.getElementById("page2").style.display = "none";
       document.getElementById("page3").style.display = "block";
@@ -217,7 +204,6 @@
       document.getElementById("extraQuestionBox").style.display = "none";
       document.getElementById("extraAnswerBox").innerHTML = "";
 
-      // Loading दिखाओ
       document.getElementById("topicContent").innerHTML = `
         <div class="loading-box">
           <div class="spinner"></div>
@@ -237,22 +223,16 @@
         const data = await response.json();
         const answer = data.answer || "माफ करना, जानकारी नहीं मिली!";
 
-        // Content दिखाओ
         document.getElementById("topicContent").innerHTML = `
           <div class="topic-text">${answer.replace(/\n/g, "<br>")}</div>
         `;
 
         document.getElementById("audioControls").style.display = "flex";
 
-        // Audio play करो
-        if (data.audio) {
-          playAudio(data.audio);
-        }
+        if (data.audio) playAudio(data.audio);
 
       } catch (error) {
-        document.getElementById("topicContent").innerHTML = `
-          <p style="color:red">❌ Error! Backend से connect नहीं हो पाया।</p>
-        `;
+        document.getElementById("topicContent").innerHTML = `<p style="color:red">❌ Error! Backend से connect नहीं हो पाया।</p>`;
       }
     }
 
@@ -294,12 +274,9 @@
       }
     }
 
-    // ===== Audio Controls =====
+    // ===== Audio =====
     function playAudio(base64Audio) {
-      if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
-      }
+      if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
       const audio = new Audio("data:audio/mp3;base64," + base64Audio);
       audio.playbackRate = 1.3;
       currentAudio = audio;
@@ -307,17 +284,11 @@
     }
 
     function replayAudio() {
-      if (currentAudio) {
-        currentAudio.currentTime = 0;
-        currentAudio.play();
-      }
+      if (currentAudio) { currentAudio.currentTime = 0; currentAudio.play(); }
     }
 
     function stopAudio() {
-      if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
-      }
+      if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
     }
 
     // ===== Navigation =====
@@ -327,7 +298,7 @@
       stopAudio();
     }
 
-    function goToPage2back() {
+    function goToPage2() {
       document.getElementById("page3").style.display = "none";
       document.getElementById("page2").style.display = "block";
       stopAudio();
@@ -337,7 +308,6 @@
       document.querySelector("nav ul").classList.toggle("active");
     }
 
-    // Enter से topic add करो
     document.addEventListener("DOMContentLoaded", () => {
       showCourses();
       document.getElementById("newTopicInput").addEventListener("keypress", (e) => {
@@ -347,10 +317,6 @@
         if (e.key === "Enter") submitExtraQuestion();
       });
     });
-
-    function goToPage2() {
-      goToPage2back();
-    }
   </script>
 </body>
 </html>
