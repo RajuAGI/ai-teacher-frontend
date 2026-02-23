@@ -800,3 +800,39 @@ nav ul a:hover { color: #e94560; }
   .topic-audio-controls { justify-content: center; }
   .extra-question-box { flex-direction: column; }
 }
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.empty-state h3 {
+  font-size: 22px;
+  color: white;
+}
+
+.empty-state p {
+  color: #aaa;
+  font-size: 15px;
+}
+
+.empty-state button {
+  background: #e94560;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 30px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 10px;
+}
+
+.empty-state button:hover {
+  background: #c73652;
+}
