@@ -430,3 +430,147 @@ nav ul a:hover { color: #e94560; }
   color: #aaa;
   font-size: 14px;
   }
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+
+  /* Navigation */
+  nav {
+    padding: 10px 15px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    display: none;
+  }
+
+  nav ul.active {
+    display: flex;
+  }
+
+  .nav-toggle {
+    display: block;
+    background: #e94560;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    align-self: flex-end;
+    margin-top: -35px;
+  }
+
+  /* Container */
+  .container {
+    border-radius: 20px;
+    padding: 20px;
+    margin: 10px;
+    width: auto;
+  }
+
+  /* Teacher Box */
+  .teacher-box .avatar img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .teacher-box h1 {
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  /* Input Box */
+  .input-box {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .input-box input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .input-box button {
+    width: 100%;
+  }
+
+  /* Controls */
+  .controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .controls button {
+    width: 100%;
+  }
+
+  /* Cards Grid */
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Quiz */
+  .quiz-topics {
+    grid-template-columns: 1fr;
+  }
+
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quiz-box {
+    padding: 20px;
+  }
+
+  /* Leaderboard */
+  .top-three {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .top-card.first {
+    transform: scale(1);
+    order: -1;
+  }
+
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+
+  /* About */
+  .about-teacher {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  /* Contact */
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Auth Box */
+  .auth-box {
+    padding: 25px 15px;
+    margin: 10px;
+  }
+
+  /* Page Header */
+  .page-header h1 {
+    font-size: 28px;
+  }
+
+  /* Footer */
+  .page-footer {
+    font-size: 12px;
+    padding: 15px;
+  }
+}
