@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -71,7 +72,6 @@
         <button onclick="askMoreQuestion()">❓ और पूछो</button>
       </div>
 
-      <!-- Extra Question Box -->
       <div class="extra-question-box" id="extraQuestionBox" style="display:none">
         <input type="text" id="extraQuestion" placeholder="इस topic पर कोई सवाल पूछो..." />
         <button onclick="submitExtraQuestion()">पूछो ➤</button>
@@ -86,10 +86,11 @@
   </footer>
 
   <script>
-         const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
+    const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
     let currentTopic = "";
     let currentAudio = null;
 
+    // ===== Default Data =====
     const defaultData = {
       "➕ गणित": ["संख्या पद्धति", "जोड़ और घटाव", "गुणा और भाग", "भिन्न", "दशमलव", "प्रतिशत", "Algebra", "ज्यामिति", "त्रिकोणमिति"],
       "🔬 विज्ञान": ["गति और बल", "ऊर्जा", "परमाणु", "कोशिका", "पाचन तंत्र", "सौरमंडल", "रासायनिक अभिक्रिया", "प्रकाश"],
@@ -101,15 +102,27 @@
       "💰 अर्थशास्त्र": ["बाज़ार क्या है", "माँग और पूर्ति", "GDP", "मुद्रास्फीति", "भारतीय बजट"]
     };
 
+    // ===== Data Management =====
     function loadData() {
       const saved = localStorage.getItem("courseData");
       if (saved) return JSON.parse(saved);
-      localStorage.setItem("courseData", JSON.stringify(defaultData));
-      return JSON.parse(JSON.stringify(defaultData));
+      const fresh = JSON.parse(JSON.stringify(defaultData));
+      localStorage.setItem("courseData", JSON.stringify(fresh));
+      return fresh;
     }
 
     function saveData(data) {
       localStorage.setItem("courseData", JSON.stringify(data));
+    }
+
+    function restoreDefaults(course) {
+      if (!confirm(`"${course}" के default topics वापस लाना चाहते हो?`)) return;
+      const data = loadData();
+      if (defaultData[course]) {
+        data[course] = [...defaultData[course]];
+        saveData(data);
+        showTopics(course);
+      }
     }
 
     // ===== Page 1: Courses =====
@@ -130,7 +143,6 @@
           <p>${topics.length} Topics उपलब्ध</p>
           <span class="level">▶ शुरू करो</span>
         `;
-        // Course name को data attribute में save करो
         card.setAttribute("data-course", course);
         card.onclick = function() {
           openCourse(this.getAttribute("data-course"));
@@ -141,7 +153,6 @@
 
     // ===== Page 2: Topics =====
     function openCourse(course) {
-      // Page 2 को course name से tag करो
       document.getElementById("page2").setAttribute("data-current-course", course);
       document.getElementById("page1").style.display = "none";
       document.getElementById("page2").style.display = "block";
@@ -155,13 +166,21 @@
 
     function showTopics(course) {
       const data = loadData();
-      // हमेशा passed course use करो — global variable नहीं!
       const topics = data[course] || [];
       const grid = document.getElementById("topicsGrid");
       grid.innerHTML = "";
 
       if (topics.length === 0) {
-        grid.innerHTML = '<p style="color:#aaa;text-align:center;margin-top:30px">कोई topic नहीं है — नया topic जोड़ो!</p>';
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div style="font-size:60px">😢</div>
+            <h3>कोई Topic नहीं बचा!</h3>
+            <p>सभी topics delete हो गए हैं।</p>
+            <button onclick="restoreDefaults('${course.replace(/'/g, "\\'")}')">
+              🔄 Default Topics वापस लाओ
+            </button>
+          </div>
+        `;
         return;
       }
 
@@ -169,7 +188,6 @@
         const card = document.createElement("div");
         card.className = "topic-card";
         card.setAttribute("data-topic", topic);
-        card.setAttribute("data-index", i);
         card.innerHTML = `
           <span class="topic-num">${i + 1}</span>
           <span class="topic-name">${topic}</span>
@@ -188,7 +206,6 @@
       const newTopic = input.value.trim();
       if (!newTopic) { alert("Topic का नाम लिखो!"); return; }
 
-      // getCurrentCourse() से सही course लो
       const course = getCurrentCourse();
       if (!course) { alert("पहले course select करो!"); return; }
 
@@ -199,13 +216,12 @@
       data[course].push(newTopic);
       saveData(data);
       input.value = "";
-      showTopics(course); // course explicitly pass करो
+      showTopics(course);
     }
 
     function deleteTopic(index, event) {
       event.stopPropagation();
       if (!confirm("क्या आप यह topic delete करना चाहते हो?")) return;
-
       const course = getCurrentCourse();
       const data = loadData();
       data[course].splice(index, 1);
@@ -252,7 +268,9 @@
         if (data.audio) playAudio(data.audio);
 
       } catch (error) {
-        document.getElementById("topicContent").innerHTML = `<p style="color:red">❌ Error! Backend से connect नहीं हो पाया।</p>`;
+        document.getElementById("topicContent").innerHTML = `
+          <p style="color:red">❌ Error! Backend से connect नहीं हो पाया।</p>
+        `;
       }
     }
 
@@ -268,7 +286,12 @@
 
       const course = document.getElementById("page3").getAttribute("data-current-course");
       const answerBox = document.getElementById("extraAnswerBox");
-      answerBox.innerHTML = `<div class="extra-answer loading-box"><div class="spinner"></div><p>सोच रहा हूं...</p></div>`;
+      answerBox.innerHTML = `
+        <div class="extra-answer loading-box">
+          <div class="spinner"></div>
+          <p>सोच रहा हूं...</p>
+        </div>
+      `;
 
       try {
         const response = await fetch(`${BACKEND_URL}/ask`, {
@@ -322,6 +345,7 @@
       const course = document.getElementById("page3").getAttribute("data-current-course");
       document.getElementById("page3").style.display = "none";
       document.getElementById("page2").style.display = "block";
+      document.getElementById("page2").setAttribute("data-current-course", course);
       showTopics(course);
       stopAudio();
     }
@@ -330,6 +354,7 @@
       document.querySelector("nav ul").classList.toggle("active");
     }
 
+    // ===== Init =====
     document.addEventListener("DOMContentLoaded", () => {
       showCourses();
       document.getElementById("newTopicInput").addEventListener("keypress", (e) => {
@@ -338,8 +363,7 @@
       document.getElementById("extraQuestion").addEventListener("keypress", (e) => {
         if (e.key === "Enter") submitExtraQuestion();
       });
-    });     
-
+    });
   </script>
 </body>
 </html>
