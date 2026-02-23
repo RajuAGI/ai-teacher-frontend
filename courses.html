@@ -10,6 +10,7 @@
 <body>
   <nav>
     <div class="logo">🧑‍🏫 राजू राम</div>
+    <button class="nav-toggle" onclick="toggleMenu()">☰</button>
     <ul>
       <li><a href="index.html">Home</a></li>
       <li><a href="courses.html">Courses</a></li>
@@ -21,54 +22,62 @@
     </ul>
   </nav>
 
-  <div class="page-container">
-    <div class="page-header">
-      <h1>📚 हमारे Courses</h1>
-      <p>अपना topic चुनो और सीखना शुरू करो!</p>
+  <!-- Page 1: Courses List -->
+  <div id="page1">
+    <div class="page-container">
+      <div class="page-header">
+        <h1>📚 हमारे Courses</h1>
+        <p>अपना course चुनो और सीखना शुरू करो!</p>
+      </div>
+      <div class="cards-grid" id="coursesGrid"></div>
     </div>
+  </div>
 
-    <div class="cards-grid">
-      <div class="course-card" onclick="startCourse('गणित')">
-        <div class="card-icon">➕</div>
-        <h3>गणित</h3>
-        <p>जोड़, घटाव, गुणा, भाग से लेकर Algebra तक</p>
-        <span class="level">🟢 Beginner</span>
+  <!-- Page 2: Topics List -->
+  <div id="page2" style="display:none">
+    <div class="page-container">
+      <div class="course-header">
+        <button onclick="goToPage1()">← वापस</button>
+        <h1 id="courseTitle2"></h1>
       </div>
 
-      <div class="course-card" onclick="startCourse('विज्ञान')">
-        <div class="card-icon">🔬</div>
-        <h3>विज्ञान</h3>
-        <p>Physics, Chemistry, Biology सब हिंदी में</p>
-        <span class="level">🟡 Intermediate</span>
+      <div class="topic-actions">
+        <input type="text" id="newTopicInput" placeholder="✏️ नया Topic जोड़ो..." />
+        <button onclick="addTopic()">+ जोड़ो</button>
       </div>
 
-      <div class="course-card" onclick="startCourse('इतिहास')">
-        <div class="card-icon">🏛️</div>
-        <h3>इतिहास</h3>
-        <p>भारत का इतिहास, स्वतंत्रता संग्राम और विश्व इतिहास</p>
-        <span class="level">🟢 Beginner</span>
+      <div class="topics-grid" id="topicsGrid"></div>
+    </div>
+  </div>
+
+  <!-- Page 3: Topic Detail -->
+  <div id="page3" style="display:none">
+    <div class="page-container">
+      <div class="course-header">
+        <button onclick="goToPage2()">← वापस</button>
+        <h1 id="topicTitle3"></h1>
       </div>
 
-      <div class="course-card" onclick="startCourse('Computer Science')">
-        <div class="card-icon">💻</div>
-        <h3>Computer Science</h3>
-        <p>Programming, Web Development, AI सब कुछ</p>
-        <span class="level">🔴 Advanced</span>
+      <div class="topic-content-box" id="topicContent">
+        <div class="loading-box">
+          <div class="spinner"></div>
+          <p>🤔 AI जानकारी तैयार कर रहा है...</p>
+        </div>
       </div>
 
-      <div class="course-card" onclick="startCourse('English')">
-        <div class="card-icon">🇬🇧</div>
-        <h3>English</h3>
-        <p>Grammar, Vocabulary, Speaking और Writing</p>
-        <span class="level">🟡 Intermediate</span>
+      <div class="topic-audio-controls" id="audioControls" style="display:none">
+        <button onclick="replayAudio()">🔊 फिर से सुनो</button>
+        <button onclick="stopAudio()">⏹ रोको</button>
+        <button onclick="askMoreQuestion()">❓ और पूछो</button>
       </div>
 
-      <div class="course-card" onclick="startCourse('सामान्य ज्ञान')">
-        <div class="card-icon">🌍</div>
-        <h3>सामान्य ज्ञान</h3>
-        <p>Current Affairs, GK और India के बारे में</p>
-        <span class="level">🟢 Beginner</span>
+      <!-- Extra Question Box -->
+      <div class="extra-question-box" id="extraQuestionBox" style="display:none">
+        <input type="text" id="extraQuestion" placeholder="इस topic पर कोई सवाल पूछो..." />
+        <button onclick="submitExtraQuestion()">पूछो ➤</button>
       </div>
+
+      <div id="extraAnswerBox"></div>
     </div>
   </div>
 
@@ -77,8 +86,270 @@
   </footer>
 
   <script>
-    function startCourse(topic) {
-      window.location.href = `index.html?topic=${encodeURIComponent(topic)}`;
+    const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
+    let currentCourse = "";
+    let currentTopic = "";
+    let currentAudio = null;
+
+    // ===== Default Courses & Topics =====
+    const defaultData = {
+      "➕ गणित": ["संख्या पद्धति", "जोड़ और घटाव", "गुणा और भाग", "भिन्न", "दशमलव", "प्रतिशत", "Algebra", "ज्यामिति", "त्रिकोणमिति"],
+      "🔬 विज्ञान": ["गति और बल", "ऊर्जा", "परमाणु", "कोशिका", "पाचन तंत्र", "सौरमंडल", "रासायनिक अभिक्रिया", "प्रकाश"],
+      "🏛️ इतिहास": ["सिंधु घाटी सभ्यता", "मुगल साम्राज्य", "स्वतंत्रता संग्राम", "महात्मा गांधी", "1857 की क्रांति", "भारत विभाजन"],
+      "💻 Computer Science": ["Computer क्या है", "Internet", "HTML Basics", "Python", "Artificial Intelligence", "Cyber Security"],
+      "🇬🇧 English": ["Tenses", "Grammar", "Vocabulary", "Reading", "Writing Skills", "Speaking Tips"],
+      "🌍 सामान्य ज्ञान": ["भारत के राज्य", "भारत के त्योहार", "भारतीय संविधान", "विश्व के देश", "खेल जगत", "Current Affairs"],
+      "🗺️ भूगोल": ["भारत के पर्वत", "भारत की नदियाँ", "जलवायु", "मिट्टी के प्रकार", "विश्व के महाद्वीप"],
+      "💰 अर्थशास्त्र": ["बाज़ार क्या है", "माँग और पूर्ति", "GDP", "मुद्रास्फीति", "भारतीय बजट"]
+    };
+
+    // ===== localStorage से data load करो =====
+    function loadData() {
+      const saved = localStorage.getItem("courseData");
+      if (saved) {
+        return JSON.parse(saved);
+      }
+      localStorage.setItem("courseData", JSON.stringify(defaultData));
+      return defaultData;
+    }
+
+    function saveData(data) {
+      localStorage.setItem("courseData", JSON.stringify(data));
+    }
+
+    // ===== Page 1: Courses दिखाओ =====
+    function showCourses() {
+      const data = loadData();
+      const grid = document.getElementById("coursesGrid");
+      grid.innerHTML = "";
+
+      const colors = ["#e94560", "#0f3460", "#16213e", "#533483", "#e94560", "#1a1a2e", "#0f3460", "#533483"];
+
+      Object.keys(data).forEach((course, i) => {
+        const topics = data[course];
+        const card = document.createElement("div");
+        card.className = "course-card";
+        card.style.borderTop = `5px solid ${colors[i % colors.length]}`;
+        card.innerHTML = `
+          <div class="card-icon">${course.split(" ")[0]}</div>
+          <h3>${course.split(" ").slice(1).join(" ")}</h3>
+          <p>${topics.length} Topics उपलब्ध</p>
+          <span class="level">▶ शुरू करो</span>
+        `;
+        card.onclick = () => goToPage2(course);
+        grid.appendChild(card);
+      });
+    }
+
+    // ===== Page 2: Topics दिखाओ =====
+    function goToPage2(course) {
+      currentCourse = course;
+      document.getElementById("page1").style.display = "none";
+      document.getElementById("page2").style.display = "block";
+      document.getElementById("courseTitle2").innerText = course;
+      showTopics();
+    }
+
+    function showTopics() {
+      const data = loadData();
+      const topics = data[currentCourse] || [];
+      const grid = document.getElementById("topicsGrid");
+      grid.innerHTML = "";
+
+      topics.forEach((topic, i) => {
+        const card = document.createElement("div");
+        card.className = "topic-card";
+        card.innerHTML = `
+          <span class="topic-num">${i + 1}</span>
+          <span class="topic-name">${topic}</span>
+          <button class="delete-btn" onclick="deleteTopic(${i}, event)">🗑️</button>
+        `;
+        card.onclick = () => goToPage3(topic);
+        grid.appendChild(card);
+      });
+
+      if (topics.length === 0) {
+        grid.innerHTML = '<p style="color:#aaa;text-align:center;margin-top:30px">कोई topic नहीं है — नया topic जोड़ो!</p>';
+      }
+    }
+
+    // ===== Topic Add करो =====
+    function addTopic() {
+      const input = document.getElementById("newTopicInput");
+      const newTopic = input.value.trim();
+      if (!newTopic) {
+        alert("Topic का नाम लिखो!");
+        return;
+      }
+
+      const data = loadData();
+      if (!data[currentCourse]) data[currentCourse] = [];
+
+      if (data[currentCourse].includes(newTopic)) {
+        alert("यह topic पहले से है!");
+        return;
+      }
+
+      data[currentCourse].push(newTopic);
+      saveData(data);
+      input.value = "";
+      showTopics();
+    }
+
+    // ===== Topic Delete करो =====
+    function deleteTopic(index, event) {
+      event.stopPropagation();
+      if (!confirm("क्या आप यह topic delete करना चाहते हो?")) return;
+
+      const data = loadData();
+      data[currentCourse].splice(index, 1);
+      saveData(data);
+      showTopics();
+    }
+
+    // ===== Page 3: Topic Detail =====
+    async function goToPage3(topic) {
+      currentTopic = topic;
+      document.getElementById("page2").style.display = "none";
+      document.getElementById("page3").style.display = "block";
+      document.getElementById("topicTitle3").innerText = "📖 " + topic;
+      document.getElementById("audioControls").style.display = "none";
+      document.getElementById("extraQuestionBox").style.display = "none";
+      document.getElementById("extraAnswerBox").innerHTML = "";
+
+      // Loading दिखाओ
+      document.getElementById("topicContent").innerHTML = `
+        <div class="loading-box">
+          <div class="spinner"></div>
+          <p>🤔 AI "${topic}" की जानकारी तैयार कर रहा है...</p>
+        </div>
+      `;
+
+      try {
+        const response = await fetch(`${BACKEND_URL}/ask`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            question: `${currentCourse} में "${topic}" के बारे में संपूर्ण जानकारी दो। परिभाषा, मुख्य बातें, उदाहरण और महत्व बताओ। जवाब 200 शब्दों में दो।`
+          })
+        });
+
+        const data = await response.json();
+        const answer = data.answer || "माफ करना, जानकारी नहीं मिली!";
+
+        // Content दिखाओ
+        document.getElementById("topicContent").innerHTML = `
+          <div class="topic-text">${answer.replace(/\n/g, "<br>")}</div>
+        `;
+
+        document.getElementById("audioControls").style.display = "flex";
+
+        // Audio play करो
+        if (data.audio) {
+          playAudio(data.audio);
+        }
+
+      } catch (error) {
+        document.getElementById("topicContent").innerHTML = `
+          <p style="color:red">❌ Error! Backend से connect नहीं हो पाया।</p>
+        `;
+      }
+    }
+
+    // ===== Extra Question =====
+    function askMoreQuestion() {
+      const box = document.getElementById("extraQuestionBox");
+      box.style.display = box.style.display === "none" ? "flex" : "none";
+    }
+
+    async function submitExtraQuestion() {
+      const question = document.getElementById("extraQuestion").value.trim();
+      if (!question) return;
+
+      const answerBox = document.getElementById("extraAnswerBox");
+      answerBox.innerHTML = `<div class="extra-answer loading-box"><div class="spinner"></div><p>सोच रहा हूं...</p></div>`;
+
+      try {
+        const response = await fetch(`${BACKEND_URL}/ask`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            question: `${currentCourse} के "${currentTopic}" topic के बारे में: ${question}`
+          })
+        });
+
+        const data = await response.json();
+        answerBox.innerHTML = `
+          <div class="extra-answer">
+            <strong>❓ ${question}</strong>
+            <p>${data.answer.replace(/\n/g, "<br>")}</p>
+          </div>
+        `;
+
+        if (data.audio) playAudio(data.audio);
+        document.getElementById("extraQuestion").value = "";
+
+      } catch (error) {
+        answerBox.innerHTML = `<p style="color:red">❌ Error!</p>`;
+      }
+    }
+
+    // ===== Audio Controls =====
+    function playAudio(base64Audio) {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+      const audio = new Audio("data:audio/mp3;base64," + base64Audio);
+      audio.playbackRate = 1.3;
+      currentAudio = audio;
+      audio.play().catch(() => {});
+    }
+
+    function replayAudio() {
+      if (currentAudio) {
+        currentAudio.currentTime = 0;
+        currentAudio.play();
+      }
+    }
+
+    function stopAudio() {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+    }
+
+    // ===== Navigation =====
+    function goToPage1() {
+      document.getElementById("page2").style.display = "none";
+      document.getElementById("page1").style.display = "block";
+      stopAudio();
+    }
+
+    function goToPage2back() {
+      document.getElementById("page3").style.display = "none";
+      document.getElementById("page2").style.display = "block";
+      stopAudio();
+    }
+
+    function toggleMenu() {
+      document.querySelector("nav ul").classList.toggle("active");
+    }
+
+    // Enter से topic add करो
+    document.addEventListener("DOMContentLoaded", () => {
+      showCourses();
+      document.getElementById("newTopicInput").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") addTopic();
+      });
+      document.getElementById("extraQuestion").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") submitExtraQuestion();
+      });
+    });
+
+    function goToPage2() {
+      goToPage2back();
     }
   </script>
 </body>
