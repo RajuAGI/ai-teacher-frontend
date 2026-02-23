@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - AI Teacher</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+  <nav>
+    <div class="logo">🧑‍🏫 राजू राम</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="courses.html">Courses</a></li>
+      <li><a href="quiz.html">Quiz</a></li>
+      <li><a href="leaderboard.html">Leaderboard</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="login.html" class="login-btn">Login</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-container">
+    <div class="auth-box">
+      <div id="loginBox">
+        <div class="auth-header">
+          <img src="photo.jpg" alt="Raju Ram" />
+          <h2>वापस आओ! 🙏</h2>
+          <p>Login करो और पढ़ाई शुरू करो</p>
+        </div>
+        <input type="email" id="loginEmail" placeholder="📧 Email" />
+        <input type="password" id="loginPassword" placeholder="🔒 Password" />
+        <button onclick="login()">Login करें</button>
+        <p id="loginStatus"></p>
+        <p class="switch-auth">नए हो? <a onclick="showSignup()">अभी Register करो!</a></p>
+      </div>
+
+      <div id="signupBox" style="display:none">
+        <div class="auth-header">
+          <img src="photo.jpg" alt="Raju Ram" />
+          <h2>स्वागत है! 🎉</h2>
+          <p>Account बनाओ और सीखना शुरू करो</p>
+        </div>
+        <input type="text" id="signupName" placeholder="👤 आपका नाम" />
+        <input type="email" id="signupEmail" placeholder="📧 Email" />
+        <input type="password" id="signupPassword" placeholder="🔒 Password" />
+        <button onclick="signup()">Register करें</button>
+        <p id="signupStatus"></p>
+        <p class="switch-auth">पहले से Account है? <a onclick="showLogin()">Login करो!</a></p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <p>© 2025 AI Teacher - राजू राम। सर्वाधिकार सुरक्षित।</p>
+  </footer>
+
+  <script>
+    function showSignup() {
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("signupBox").style.display = "block";
+    }
+
+    function showLogin() {
+      document.getElementById("signupBox").style.display = "none";
+      document.getElementById("loginBox").style.display = "block";
+    }
+
+    function login() {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      if (!email || !password) {
+        document.getElementById("loginStatus").innerText = "❌ कृपया सभी fields भरें!";
+        return;
+      }
+      document.getElementById("loginStatus").innerText = "✅ Login हो गया! स्वागत है!";
+      setTimeout(() => window.location.href = "index.html", 1500);
+    }
+
+    function signup() {
+      const name = document.getElementById("signupName").value;
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+      if (!name || !email || !password) {
+        document.getElementById("signupStatus").innerText = "❌ कृपया सभी fields भरें!";
+        return;
+      }
+      document.getElementById("signupStatus").innerText = "✅ Account बन गया! Login करो!";
+      setTimeout(() => showLogin(), 1500);
+    }
+  </script>
+</body>
+</html>
