@@ -91,7 +91,7 @@ function speakNextSentence() {
     speech.lang = "en-IN"; // Indian English accent
   }
 
-  speech.rate = 0.82;   // थोड़ा धीमा — Indian style
+  speech.rate = 1;   // थोड़ा धीमा — Indian style
   speech.pitch = 0.55;  // गहरी आवाज़ — पुरुष जैसी
   speech.volume = 1;
 
