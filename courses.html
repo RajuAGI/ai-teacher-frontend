@@ -86,9 +86,7 @@
   </footer>
 
   <script>
-              
-const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
-    let currentCourse = "";
+         const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
     let currentTopic = "";
     let currentAudio = null;
 
@@ -107,14 +105,14 @@ const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
       const saved = localStorage.getItem("courseData");
       if (saved) return JSON.parse(saved);
       localStorage.setItem("courseData", JSON.stringify(defaultData));
-      return defaultData;
+      return JSON.parse(JSON.stringify(defaultData));
     }
 
     function saveData(data) {
       localStorage.setItem("courseData", JSON.stringify(data));
     }
 
-    // ===== Page 1 =====
+    // ===== Page 1: Courses =====
     function showCourses() {
       const data = loadData();
       const grid = document.getElementById("coursesGrid");
@@ -132,23 +130,33 @@ const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
           <p>${topics.length} Topics उपलब्ध</p>
           <span class="level">▶ शुरू करो</span>
         `;
-        card.onclick = function() { openCourse(course); };
+        // Course name को data attribute में save करो
+        card.setAttribute("data-course", course);
+        card.onclick = function() {
+          openCourse(this.getAttribute("data-course"));
+        };
         grid.appendChild(card);
       });
     }
 
-    // ===== Page 2 =====
+    // ===== Page 2: Topics =====
     function openCourse(course) {
-      currentCourse = course;
+      // Page 2 को course name से tag करो
+      document.getElementById("page2").setAttribute("data-current-course", course);
       document.getElementById("page1").style.display = "none";
       document.getElementById("page2").style.display = "block";
       document.getElementById("courseTitle2").innerText = course;
-      showTopics();
+      showTopics(course);
     }
 
-    function showTopics() {
+    function getCurrentCourse() {
+      return document.getElementById("page2").getAttribute("data-current-course");
+    }
+
+    function showTopics(course) {
       const data = loadData();
-      const topics = data[currentCourse] || [];
+      // हमेशा passed course use करो — global variable नहीं!
+      const topics = data[course] || [];
       const grid = document.getElementById("topicsGrid");
       grid.innerHTML = "";
 
@@ -160,12 +168,17 @@ const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
       topics.forEach((topic, i) => {
         const card = document.createElement("div");
         card.className = "topic-card";
+        card.setAttribute("data-topic", topic);
+        card.setAttribute("data-index", i);
         card.innerHTML = `
           <span class="topic-num">${i + 1}</span>
           <span class="topic-name">${topic}</span>
           <button class="delete-btn" onclick="deleteTopic(${i}, event)">🗑️</button>
         `;
-        card.onclick = function() { openTopic(topic); };
+        card.onclick = function(e) {
+          if (e.target.classList.contains("delete-btn")) return;
+          openTopic(this.getAttribute("data-topic"));
+        };
         grid.appendChild(card);
       });
     }
@@ -175,30 +188,39 @@ const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
       const newTopic = input.value.trim();
       if (!newTopic) { alert("Topic का नाम लिखो!"); return; }
 
-      const data = loadData();
-      if (!data[currentCourse]) data[currentCourse] = [];
-      if (data[currentCourse].includes(newTopic)) { alert("यह topic पहले से है!"); return; }
+      // getCurrentCourse() से सही course लो
+      const course = getCurrentCourse();
+      if (!course) { alert("पहले course select करो!"); return; }
 
-      data[currentCourse].push(newTopic);
+      const data = loadData();
+      if (!data[course]) data[course] = [];
+      if (data[course].includes(newTopic)) { alert("यह topic पहले से है!"); return; }
+
+      data[course].push(newTopic);
       saveData(data);
       input.value = "";
-      showTopics();
+      showTopics(course); // course explicitly pass करो
     }
 
     function deleteTopic(index, event) {
       event.stopPropagation();
       if (!confirm("क्या आप यह topic delete करना चाहते हो?")) return;
+
+      const course = getCurrentCourse();
       const data = loadData();
-      data[currentCourse].splice(index, 1);
+      data[course].splice(index, 1);
       saveData(data);
-      showTopics();
+      showTopics(course);
     }
 
-    // ===== Page 3 =====
+    // ===== Page 3: Topic Detail =====
     async function openTopic(topic) {
       currentTopic = topic;
+      const course = getCurrentCourse();
+
       document.getElementById("page2").style.display = "none";
       document.getElementById("page3").style.display = "block";
+      document.getElementById("page3").setAttribute("data-current-course", course);
       document.getElementById("topicTitle3").innerText = "📖 " + topic;
       document.getElementById("audioControls").style.display = "none";
       document.getElementById("extraQuestionBox").style.display = "none";
@@ -216,7 +238,7 @@ const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            question: `${currentCourse} में "${topic}" के बारे में संपूर्ण जानकारी दो। परिभाषा, मुख्य बातें, उदाहरण और महत्व बताओ। जवाब 200 शब्दों में दो।`
+            question: `${course} में "${topic}" के बारे में संपूर्ण जानकारी दो। परिभाषा, मुख्य बातें, उदाहरण और महत्व बताओ। जवाब 200 शब्दों में दो।`
           })
         });
 
@@ -226,9 +248,7 @@ const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
         document.getElementById("topicContent").innerHTML = `
           <div class="topic-text">${answer.replace(/\n/g, "<br>")}</div>
         `;
-
         document.getElementById("audioControls").style.display = "flex";
-
         if (data.audio) playAudio(data.audio);
 
       } catch (error) {
@@ -246,6 +266,7 @@ const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
       const question = document.getElementById("extraQuestion").value.trim();
       if (!question) return;
 
+      const course = document.getElementById("page3").getAttribute("data-current-course");
       const answerBox = document.getElementById("extraAnswerBox");
       answerBox.innerHTML = `<div class="extra-answer loading-box"><div class="spinner"></div><p>सोच रहा हूं...</p></div>`;
 
@@ -254,7 +275,7 @@ const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            question: `${currentCourse} के "${currentTopic}" topic के बारे में: ${question}`
+            question: `${course} के "${currentTopic}" topic के बारे में: ${question}`
           })
         });
 
@@ -265,7 +286,6 @@ const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
             <p>${data.answer.replace(/\n/g, "<br>")}</p>
           </div>
         `;
-
         if (data.audio) playAudio(data.audio);
         document.getElementById("extraQuestion").value = "";
 
@@ -299,8 +319,10 @@ const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
     }
 
     function goToPage2() {
+      const course = document.getElementById("page3").getAttribute("data-current-course");
       document.getElementById("page3").style.display = "none";
       document.getElementById("page2").style.display = "block";
+      showTopics(course);
       stopAudio();
     }
 
@@ -316,7 +338,8 @@ const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
       document.getElementById("extraQuestion").addEventListener("keypress", (e) => {
         if (e.key === "Enter") submitExtraQuestion();
       });
-    });
+    });     
+
   </script>
 </body>
 </html>
