@@ -92,7 +92,7 @@ function speakNextSentence() {
   }
 
   speech.rate = 0.85;
-  speech.pitch = 0.5;
+  speech.pitch = 0.8;
   speech.volume = 1;
 
   // जब एक sentence खत्म हो तो अगला शुरू करो
