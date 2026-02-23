@@ -1,6 +1,8 @@
 const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
 
 let currentAnswer = "";
+let sentences = [];
+let currentIndex = 0;
 
 async function askTeacher() {
   const question = document.getElementById("questionInput").value.trim();
@@ -29,7 +31,7 @@ async function askTeacher() {
     document.getElementById("speakBtn").disabled = false;
     document.getElementById("stopBtn").disabled = false;
 
-    // Auto speak the answer
+    // Auto speak
     speakAnswer();
 
   } catch (error) {
@@ -37,31 +39,48 @@ async function askTeacher() {
   }
 }
 
+// Split text into small sentences
+function splitIntoSentences(text) {
+  return text.match(/[^।\.!\?]+[।\.!\?]+/g) || [text];
+}
+
 function speakAnswer() {
   if (!currentAnswer) return;
 
   window.speechSynthesis.cancel();
+  currentIndex = 0;
 
-  const speech = new SpeechSynthesisUtterance(currentAnswer);
+  // Split answer into small sentences
+  sentences = splitIntoSentences(currentAnswer);
 
+  speakNextSentence();
+}
+
+function speakNextSentence() {
+  if (currentIndex >= sentences.length) return;
+
+  const sentence = sentences[currentIndex].trim();
+  if (!sentence) {
+    currentIndex++;
+    speakNextSentence();
+    return;
+  }
+
+  const speech = new SpeechSynthesisUtterance(sentence);
+
+  // Set Indian male voice
   const voices = window.speechSynthesis.getVoices();
-
-  // Try to find Indian male voice
   const indianVoice = voices.find(v =>
-    v.name.includes("Ravi") ||          // Google Hindi Male
+    v.name.includes("Ravi") ||
     v.name.includes("Hindi Male") ||
-    v.name.includes("hi-IN") ||
     v.lang.includes("hi-IN") ||
-    v.name.includes("Google हिन्दी") ||
-    v.name.includes("Indian") ||
-    v.name.includes("hi_IN")
+    v.name.includes("Indian")
   );
 
   if (indianVoice) {
     speech.voice = indianVoice;
     speech.lang = "hi-IN";
   } else {
-    // Fallback — use English with Indian accent settings
     const englishVoice = voices.find(v =>
       v.name.includes("David") ||
       v.name.includes("Google UK English Male") ||
@@ -69,26 +88,37 @@ function speakAnswer() {
       v.name.includes("James")
     );
     if (englishVoice) speech.voice = englishVoice;
-    speech.lang = "en-IN";  // Indian English accent
+    speech.lang = "en-IN";
   }
 
-  speech.rate = 0.85;   // Slightly slow like Indian dialect
-  speech.pitch = 0.5;   // Deep male voice
+  speech.rate = 0.85;
+  speech.pitch = 0.5;
   speech.volume = 1;
+
+  // जब एक sentence खत्म हो तो अगला शुरू करो
+  speech.onend = () => {
+    currentIndex++;
+    speakNextSentence();
+  };
+
+  // अगर कोई error आए तो अगला sentence try करो
+  speech.onerror = () => {
+    currentIndex++;
+    speakNextSentence();
+  };
 
   window.speechSynthesis.speak(speech);
 }
 
-// Handle voices loaded after page load
+function stopSpeaking() {
+  window.speechSynthesis.cancel();
+  currentIndex = sentences.length; // रोक दो
+}
+
 window.speechSynthesis.onvoiceschanged = () => {
   console.log("Voices loaded:", window.speechSynthesis.getVoices().map(v => v.name));
 };
 
-function stopSpeaking() {
-  window.speechSynthesis.cancel();
-}
-
-// Allow pressing Enter key to ask
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("questionInput").addEventListener("keypress", (e) => {
     if (e.key === "Enter") askTeacher();
