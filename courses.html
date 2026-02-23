@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Courses - AI Teacher</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+  <nav>
+    <div class="logo">🧑‍🏫 राजू राम</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="courses.html">Courses</a></li>
+      <li><a href="quiz.html">Quiz</a></li>
+      <li><a href="leaderboard.html">Leaderboard</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="login.html" class="login-btn">Login</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-container">
+    <div class="page-header">
+      <h1>📚 हमारे Courses</h1>
+      <p>अपना topic चुनो और सीखना शुरू करो!</p>
+    </div>
+
+    <div class="cards-grid">
+      <div class="course-card" onclick="startCourse('गणित')">
+        <div class="card-icon">➕</div>
+        <h3>गणित</h3>
+        <p>जोड़, घटाव, गुणा, भाग से लेकर Algebra तक</p>
+        <span class="level">🟢 Beginner</span>
+      </div>
+
+      <div class="course-card" onclick="startCourse('विज्ञान')">
+        <div class="card-icon">🔬</div>
+        <h3>विज्ञान</h3>
+        <p>Physics, Chemistry, Biology सब हिंदी में</p>
+        <span class="level">🟡 Intermediate</span>
+      </div>
+
+      <div class="course-card" onclick="startCourse('इतिहास')">
+        <div class="card-icon">🏛️</div>
+        <h3>इतिहास</h3>
+        <p>भारत का इतिहास, स्वतंत्रता संग्राम और विश्व इतिहास</p>
+        <span class="level">🟢 Beginner</span>
+      </div>
+
+      <div class="course-card" onclick="startCourse('Computer Science')">
+        <div class="card-icon">💻</div>
+        <h3>Computer Science</h3>
+        <p>Programming, Web Development, AI सब कुछ</p>
+        <span class="level">🔴 Advanced</span>
+      </div>
+
+      <div class="course-card" onclick="startCourse('English')">
+        <div class="card-icon">🇬🇧</div>
+        <h3>English</h3>
+        <p>Grammar, Vocabulary, Speaking और Writing</p>
+        <span class="level">🟡 Intermediate</span>
+      </div>
+
+      <div class="course-card" onclick="startCourse('सामान्य ज्ञान')">
+        <div class="card-icon">🌍</div>
+        <h3>सामान्य ज्ञान</h3>
+        <p>Current Affairs, GK और India के बारे में</p>
+        <span class="level">🟢 Beginner</span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <p>© 2025 AI Teacher - राजू राम। सर्वाधिकार सुरक्षित।</p>
+  </footer>
+
+  <script>
+    function startCourse(topic) {
+      window.location.href = `index.html?topic=${encodeURIComponent(topic)}`;
+    }
+  </script>
+</body>
+</html>
