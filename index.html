@@ -1,74 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Teacher - Raju Ram</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Teacher - Raju Ram</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="pages.css">
 </head>
-
 <body>
 
-<header class="navbar">
-  <div class="logo">🧑‍🏫 RajU AI</div>
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">🧑‍🏫 राजू राम</div>
+    <button class="nav-toggle" onclick="toggleMenu()">☰</button>
 
-  <ul class="nav-links" id="navLinks">
-    <li><a href="#">Home</a></li>
-    <li><a href="#">Courses</a></li>
-    <li><a href="#">Quiz</a></li>
-    <li><a href="#">Leaderboard</a></li>
-    <li><a href="#">About</a></li>
-    <li><a href="#">Contact</a></li>
-  </ul>
-</header>
+    <ul id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="courses.html">Courses</a></li>
+      <li><a href="quiz.html">Quiz</a></li>
+      <li><a href="leaderboard.html">Leaderboard</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="login.html" class="login-btn">Login</a></li>
+    </ul>
+  </nav>
 
-<main class="main-container">
+  <div class="container">
 
-  <section class="teacher-card">
-    <img src="photo.jpg" alt="Raju Ram">
-    <h1>Raju Ram Bajya</h1>
-    <p class="tagline">AI Powered Smart Teacher • Ask Anything</p>
-  </section>
-
-  <section class="ask-section">
-    <div class="input-group">
-      <input type="text" placeholder="Ask your question...">
-      <button>Ask ➤</button>
+    <!-- Teacher Avatar -->
+    <div class="teacher-box">
+      <div class="avatar">
+        <img src="photo.jpg" alt="Raju AGI" />
+      </div>
+      <h1>Raju Ram Bajya</h1>
+      <p class="subtitle">Ask me anything — I'll explain and speak! Use desktop site for best experience.</p>
     </div>
-  </section>
 
-  <section class="answer-section">
-    <h3>Answer</h3>
-    <div class="answer-box">
-      Your answer will appear here...
+    <!-- Input Box -->
+    <div class="input-box">
+      <input type="text" id="questionInput" placeholder="Ask your question here..." />
+      <button onclick="askTeacher()">Ask ➤</button>
     </div>
-  </section>
 
-  <section class="search-section">
-    <h3>🌐 Web Search</h3>
-    <div class="input-group">
-      <input type="text" placeholder="Search anything...">
-      <button>Search</button>
+    <!-- Answer Box -->
+    <div class="answer-box" id="answerBox">
+      <p id="answerText">Your answer will appear here...</p>
     </div>
-  </section>
 
-  <section class="controls">
-    <button class="primary">🔊 Speak</button>
-    <button class="danger">⏹ Stop</button>
-  </section>
+    <!-- Google Search Box -->
+    <div class="search-section">
+      <h3>🔍 Web Search</h3>
+      <div class="search-input-box">
+        <input type="text" id="searchInput" placeholder="Search anything..." />
+        <button onclick="doSearch()">Search 🔍</button>
+      </div>
+      <div id="searchResults" class="search-results-box" style="display:none"></div>
+    </div>
 
-</main>
+    <!-- Controls -->
+    <div class="controls">
+      <button onclick="speakAnswer()" id="speakBtn" disabled>🔊 Speak Answer</button>
+      <button onclick="stopSpeaking()" id="stopBtn" disabled>⏹ Stop</button>
+    </div>
 
-<footer>
-  © 2026 AI Teacher - Raju Ram. All Rights Reserved.
-</footer>
+  </div>
 
-<script>
-function toggleMenu(){
-  document.getElementById("navLinks").classList.toggle("active");
-}
-</script>
+  <footer class="page-footer">
+    <p>© 2025 AI Teacher - राजू राम। सर्वाधिकार सुरक्षित।</p>
+  </footer>
 
+  <script src="script.js"></script>
+  <script>
+    function toggleMenu() {
+      const ul = document.getElementById("navLinks");
+      ul.classList.toggle("active");
+    }
+  </script>
 </body>
 </html>
