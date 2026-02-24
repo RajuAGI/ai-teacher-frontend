@@ -131,3 +131,77 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.key === "Enter") askTeacher();
   });
 });
+// ===== Google Search =====
+async function doSearch() {
+  const query = document.getElementById("searchInput").value.trim();
+  if (!query) {
+    alert("कुछ search करो!");
+    return;
+  }
+
+  const resultsBox = document.getElementById("searchResults");
+  resultsBox.style.display = "block";
+  resultsBox.innerHTML = `
+    <div class="search-loading">
+      🔍 "${query}" search हो रहा है...
+    </div>
+  `;
+
+  try {
+    const response = await fetch(`${BACKEND_URL}/search`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: query })
+    });
+
+    const data = await response.json();
+
+    if (data.results && data.results.length > 0) {
+      resultsBox.innerHTML = `
+        <p style="color:#888;font-size:13px;margin-bottom:10px">
+          "${query}" के लिए ${data.results.length} results मिले:
+        </p>
+      `;
+
+      data.results.forEach(result => {
+        const item = document.createElement("div");
+        item.className = "search-result-item";
+        item.innerHTML = `
+          <h4>${result.title}</h4>
+          <p>${result.snippet}</p>
+          <a href="${result.url}" target="_blank">${result.url}</a>
+        `;
+        item.onclick = () => window.open(result.url, "_blank");
+        resultsBox.appendChild(item);
+      });
+
+    } else {
+      resultsBox.innerHTML = `
+        <div class="search-no-results">
+          😔 कोई result नहीं मिला। दूसरे शब्दों में search करो।
+        </div>
+      `;
+    }
+
+  } catch (error) {
+    resultsBox.innerHTML = `
+      <div class="search-no-results">
+        ❌ Search नहीं हो पाई। Internet check करो।
+      </div>
+    `;
+  }
+}
+
+// Enter से search करो
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("questionInput").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") askTeacher();
+  });
+
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") doSearch();
+    });
+  }
+});
