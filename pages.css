@@ -25,6 +25,51 @@ nav ul {
   flex-wrap: wrap;
 }
 
+/* Mobile Menu */
+@media (max-width: 768px) {
+  nav {
+    flex-wrap: wrap;
+    padding: 10px 15px;
+  }
+
+  .nav-toggle {
+    display: block !important;
+    background: #e94560;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+  }
+
+  nav ul {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background: #1a1a2e;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+    gap: 5px;
+  }
+
+  nav ul.active {
+    display: flex !important;
+  }
+
+  nav ul li a {
+    display: block;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+
+  nav ul li a:hover {
+    background: rgba(233, 69, 96, 0.2);
+  }
+}
+
 nav ul a {
   color: white;
   text-decoration: none;
