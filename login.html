@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - AI Teacher</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+
+  <div id="nav-placeholder"></div>
+
+  <div class="login-page-wrapper">
+    <div class="auth-box">
+
+      <div id="loginBox">
+        <div class="auth-header">
+          <img src="photo.jpg" alt="Raju Ram" />
+          <h2>वापस आओ! 🙏</h2>
+          <p>Login करो और पढ़ाई शुरू करो</p>
+        </div>
+        <input type="email" id="loginEmail" placeholder="📧 Email" />
+        <input type="password" id="loginPassword" placeholder="🔒 Password" />
+        <button onclick="login()">Login करें</button>
+        <p id="loginStatus" style="font-size:13px;text-align:center;min-height:18px"></p>
+        <p class="switch-auth">नए हो? <a onclick="showSignup()">अभी Register करो!</a></p>
+      </div>
+
+      <div id="signupBox" style="display:none">
+        <div class="auth-header">
+          <img src="photo.jpg" alt="Raju Ram" />
+          <h2>स्वागत है! 🎉</h2>
+          <p>Account बनाओ और सीखना शुरू करो</p>
+        </div>
+        <input type="text" id="signupName" placeholder="👤 आपका नाम" />
+        <input type="email" id="signupEmail" placeholder="📧 Email" />
+        <input type="password" id="signupPassword" placeholder="🔒 Password" />
+        <button onclick="signup()">Register करें</button>
+        <p id="signupStatus" style="font-size:13px;text-align:center;min-height:18px"></p>
+        <p class="switch-auth">पहले से Account है? <a onclick="showLogin()">Login करो!</a></p>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="nav-footer.js"></script>
+  <script>
+    function showSignup() {
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("signupBox").style.display = "block";
+    }
+
+    function showLogin() {
+      document.getElementById("signupBox").style.display = "none";
+      document.getElementById("loginBox").style.display = "block";
+    }
+
+    function login() {
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+      const status = document.getElementById("loginStatus");
+
+      if (!email || !password) {
+        status.style.color = "#e94560";
+        status.innerText = "❌ कृपया सभी fields भरें!";
+        return;
+      }
+
+      status.style.color = "#2ecc71";
+      status.innerText = "✅ Login हो गया! स्वागत है!";
+      setTimeout(() => window.location.href = "index.html", 1500);
+    }
+
+    function signup() {
+      const name = document.getElementById("signupName").value.trim();
+      const email = document.getElementById("signupEmail").value.trim();
+      const password = document.getElementById("signupPassword").value;
+      const status = document.getElementById("signupStatus");
+
+      if (!name || !email || !password) {
+        status.style.color = "#e94560";
+        status.innerText = "❌ कृपया सभी fields भरें!";
+        return;
+      }
+
+      status.style.color = "#2ecc71";
+      status.innerText = "✅ Account बन गया! Login करो!";
+      setTimeout(() => showLogin(), 1500);
+    }
+  </script>
+</body>
+</html>
