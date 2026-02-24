@@ -1,57 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Teacher - Raju Ram</title>
+  <title>AI Teacher - राजू राम</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="pages.css">
 </head>
 <body>
 
-  <!-- Navigation -->
-  <nav>
-    <div class="logo">🧑‍🏫 राजू राम</div>
-    <button class="nav-toggle" onclick="toggleMenu()">☰</button>
+  <!-- Navigation Placeholder -->
+  <div id="nav-placeholder"></div>
 
-    <ul id="navLinks">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="courses.html">Courses</a></li>
-      <li><a href="quiz.html">Quiz</a></li>
-      <li><a href="leaderboard.html">Leaderboard</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="contact.html">Contact</a></li>
-      <li><a href="login.html" class="login-btn">Login</a></li>
-    </ul>
-  </nav>
-
+  <!-- Main Container -->
   <div class="container">
 
-    <!-- Teacher Avatar -->
+    <!-- AI Teacher Section -->
     <div class="teacher-box">
       <div class="avatar">
         <img src="photo.jpg" alt="Raju AGI" />
       </div>
       <h1>Raju Ram Bajya</h1>
-      <p class="subtitle">Ask me anything — I'll explain and speak! Use desktop site for best experience.</p>
+      <p class="subtitle">Ask me anything — I'll explain and speak! Last knowledge: Dec 2023. Best on desktop, mobile friendly improved.</p>
     </div>
 
     <!-- Input Box -->
     <div class="input-box">
-      <input type="text" id="questionInput" placeholder="Ask your question here..." />
+      <input type="text" id="questionInput" placeholder="Apna sawal yahan likhe..." />
       <button onclick="askTeacher()">Ask ➤</button>
     </div>
 
     <!-- Answer Box -->
     <div class="answer-box" id="answerBox">
-      <p id="answerText">Your answer will appear here...</p>
+      <p id="answerText">Aapka jawab yahan dikhega...</p>
     </div>
 
-    <!-- Google Search Box -->
+    <!-- Google / Web Search -->
     <div class="search-section">
       <h3>🔍 Web Search</h3>
       <div class="search-input-box">
-        <input type="text" id="searchInput" placeholder="Search anything..." />
+        <input type="text" id="searchInput" placeholder="Kuch search karein..." />
         <button onclick="doSearch()">Search 🔍</button>
       </div>
       <div id="searchResults" class="search-results-box" style="display:none"></div>
@@ -65,16 +52,11 @@
 
   </div>
 
-  <footer class="page-footer">
-    <p>© 2025 AI Teacher - राजू राम। सर्वाधिकार सुरक्षित।</p>
-  </footer>
+  <!-- Footer Placeholder -->
+  <div id="footer-placeholder"></div>
 
+  <!-- JS -->
   <script src="script.js"></script>
-  <script>
-    function toggleMenu() {
-      const ul = document.getElementById("navLinks");
-      ul.classList.toggle("active");
-    }
-  </script>
+  <script src="nav-footer.js"></script>
 </body>
 </html>
