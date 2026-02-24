@@ -1,206 +1,221 @@
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body{
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg,#141e30,#243b55);
-  color:#333;
-}
-
-html,body{
-  overflow-x:hidden;
+html, body {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  color: #333;
+  overflow-x: hidden;
 }
 
 /* NAVBAR */
-
-.navbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px 25px;
-  background:#0f2027;
-  color:white;
-  position:sticky;
-  top:0;
-  z-index:1000;
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: #0f1f3f;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-.logo{
-  font-size:20px;
-  font-weight:bold;
+nav .logo {
+  font-size: 18px;
+  font-weight: bold;
 }
 
-.nav-links{
-  list-style:none;
-  display:flex;
-  gap:20px;
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 15px;
 }
 
-.nav-links a{
-  color:white;
-  text-decoration:none;
-  font-size:14px;
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
 }
 
-.menu-btn{
-  display:none;
-  font-size:24px;
-  background:none;
-  border:none;
-  color:white;
-  cursor:pointer;
+.nav-toggle {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
 }
 
-/* MAIN CONTAINER */
-
-.main-container{
-  max-width:700px;
-  margin:40px auto;
-  padding:20px;
+/* CONTAINER */
+.container {
+  max-width: 650px;
+  width: 95%;
+  background: white;
+  border-radius: 30px;
+  padding: 30px;
+  margin: 40px auto;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
 }
 
-/* TEACHER CARD */
-
-.teacher-card{
-  background:white;
-  padding:30px;
-  border-radius:20px;
-  text-align:center;
-  box-shadow:0 10px 30px rgba(0,0,0,0.2);
-  margin-bottom:25px;
+/* TEACHER BOX */
+.teacher-box .avatar img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #e94560;
+  box-shadow: 0 6px 25px rgba(233, 69, 96, 0.4);
+  animation: bounce 2s infinite;
+  margin-bottom: 15px;
 }
 
-.teacher-card img{
-  width:150px;
-  height:150px;
-  border-radius:50%;
-  object-fit:cover;
-  margin-bottom:15px;
-  border:4px solid #4facfe;
+.teacher-box h1 {
+  font-size: 24px;
+  color: #1a1a2e;
+  margin-bottom: 5px;
 }
 
-.teacher-card h1{
-  font-size:24px;
-  margin-bottom:8px;
+.subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 25px;
 }
 
-.tagline{
-  color:#666;
-  font-size:14px;
+/* INPUT BOX */
+.input-box, .search-input-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-/* INPUT GROUP */
-
-.input-group{
-  display:flex;
-  gap:10px;
-  margin-bottom:20px;
+.input-box input, .search-input-box input {
+  flex: 1;
+  padding: 12px 15px;
+  border-radius: 30px;
+  border: 1px solid #ddd;
+  outline: none;
+  font-size: 14px;
 }
 
-.input-group input{
-  flex:1;
-  padding:12px 15px;
-  border-radius:30px;
-  border:1px solid #ccc;
-  outline:none;
+.input-box button, .search-input-box button {
+  padding: 12px 20px;
+  border-radius: 30px;
+  border: none;
+  background: #e94560;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
 }
 
-.input-group button{
-  padding:12px 20px;
-  border:none;
-  border-radius:30px;
-  background:#4facfe;
-  color:white;
-  cursor:pointer;
-  transition:0.3s;
+.input-box button:hover, .search-input-box button:hover {
+  opacity: 0.8;
 }
 
-.input-group button:hover{
-  opacity:0.8;
+/* ANSWER BOX */
+.answer-box {
+  text-align: left;
+  background: #f4f4f4;
+  padding: 20px;
+  border-radius: 15px;
+  border-left: 5px solid #e94560;
+  min-height: 100px;
+  margin-bottom: 20px;
 }
 
-/* ANSWER */
-
-.answer-section{
-  margin-bottom:25px;
-}
-
-.answer-box{
-  background:white;
-  padding:20px;
-  border-radius:15px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.1);
-  min-height:100px;
+#answerText {
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 /* CONTROLS */
-
-.controls{
-  display:flex;
-  gap:15px;
-  justify-content:center;
-  margin-top:20px;
+.controls {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
 }
 
-.controls button{
-  padding:10px 25px;
-  border:none;
-  border-radius:30px;
-  cursor:pointer;
+.controls button {
+  padding: 12px 25px;
+  border-radius: 30px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
 }
 
-.primary{
-  background:#243b55;
-  color:white;
+#speakBtn {
+  background: #1a1a2e;
+  color: white;
 }
 
-.danger{
-  background:#ff4b5c;
-  color:white;
+#stopBtn {
+  background: #e94560;
+  color: white;
 }
 
 /* FOOTER */
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #0f1f3f;
+  color: white;
+  margin-top: 30px;
+}
 
-footer{
-  text-align:center;
-  padding:20px;
-  background:#0f2027;
-  color:white;
-  margin-top:40px;
+/* ANIMATION */
+@keyframes bounce {
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
 }
 
 /* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
 
-@media(max-width:768px){
-
-  .nav-links{
-    position:absolute;
-    top:60px;
-    right:0;
-    background:#0f2027;
-    flex-direction:column;
-    width:200px;
-    padding:20px;
-    display:none;
+  .nav-toggle {
+    display: block;
   }
 
-  .nav-links.active{
-    display:flex;
+  nav ul {
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: #0f1f3f;
+    width: 200px;
+    padding: 20px;
+    display: none;
   }
 
-  .menu-btn{
-    display:block;
+  nav ul.active {
+    display: flex;
   }
 
-  .input-group{
-    flex-direction:column;
+  .input-box, .search-input-box {
+    flex-direction: column;
   }
 
-  .controls{
-    flex-direction:column;
+  .controls {
+    flex-direction: column;
   }
 
+  .teacher-box .avatar img {
+    width: 130px;
+    height: 130px;
+  }
+
+  .teacher-box h1 {
+    font-size: 20px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
 }
