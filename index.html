@@ -46,7 +46,15 @@
     <div class="answer-box" id="answerBox">
       <p id="answerText">Your answer will appear here...</p>
     </div>
-
+<!-- Google Search Box -->
+<div class="search-section">
+  <h3>🔍 Web Search</h3>
+  <div class="search-input-box">
+    <input type="text" id="searchInput" placeholder="कुछ भी search करो..." />
+    <button onclick="doSearch()">Search 🔍</button>
+  </div>
+  <div id="searchResults" class="search-results-box" style="display:none"></div>
+</div>
     <!-- Controls -->
     <div class="controls">
       <button onclick="speakAnswer()" id="speakBtn" disabled>🔊 Speak Answer</button>
