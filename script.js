@@ -146,6 +146,8 @@ function playBackendAudio(base64Audio) {
 }
 
 function speakAnswer() {
+  const avatar = document.getElementById("aiAvatar");
+  avatar.style.transform = "scale(1.1)";
   if (!currentAnswer) return;
   window.speechSynthesis.cancel();
   const sentences = currentAnswer.match(/[^।\.!?]+[।\.!?]*/g) || [currentAnswer];
