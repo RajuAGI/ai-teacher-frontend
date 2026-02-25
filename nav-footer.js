@@ -3,6 +3,7 @@ const NAV_HTML = `
   <div class="logo">🧑‍🏫 राजू राम</div>
   <button class="nav-toggle" onclick="toggleMenu()">☰</button>
   <ul>
+  <li><a href="avatar.html">AI Avatar</a></li>
     <li><a href="index.html">🏠 Home</a></li>
     <li><a href="courses.html">📚 Courses</a></li>
     <li><a href="quiz.html">🧠 Quiz</a></li>
