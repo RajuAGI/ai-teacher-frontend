@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Teacher - राजू राम</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="pages.css">
+</head>
+<body class="home-page">
+
+  <div id="nav-placeholder"></div>
+
+  <div class="container">
+
+    <div class="teacher-box">
+      <div class="avatar">
+        <img src="photo.jpg" alt="Raju Ram" />
+      </div>
+      <h1>Raju Ram Bajya</h1>
+      <p class="subtitle">कोई भी सवाल पूछो — मैं समझाऊंगा और बोलूंगा! 🎓</p>
+    </div>
+
+    <div class="input-box">
+      <input type="text" id="questionInput" placeholder="अपना सवाल यहाँ लिखें..." />
+      <button onclick="askTeacher()">पूछो ➤</button>
+    </div>
+
+    <div class="answer-box" id="answerBox">
+      <p id="answerText">आपका जवाब यहाँ दिखेगा...</p>
+    </div>
+
+    <div class="controls">
+      <button onclick="speakAnswer()" id="speakBtn" disabled>🔊 सुनो</button>
+      <button onclick="stopSpeaking()" id="stopBtn" disabled>⏹ रोको</button>
+    </div>
+
+    <div class="search-section">
+      <h3>🔍 Web Search</h3>
+      <div class="search-input-box">
+        <input type="text" id="searchInput" placeholder="कुछ भी search करो..." />
+        <button onclick="doSearch()">Search</button>
+      </div>
+      <div id="searchResults" class="search-results-box" style="display:none"></div>
+    </div>
+
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="script.js"></script>
+  <script src="nav-footer.js"></script>
+</body>
+</html>
