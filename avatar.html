@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Teacher Avatar</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    color: white;
+}
+
+.avatar-container {
+    background: rgba(255,255,255,0.1);
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    width: 350px;
+}
+
+.avatar-img {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 5px solid white;
+    margin-bottom: 20px;
+    transition: 0.3s ease;
+}
+
+input {
+    width: 80%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    margin-bottom: 15px;
+}
+
+button {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    background: #00ffcc;
+}
+
+button:hover {
+    background: #00ccaa;
+}
+
+.speaking {
+    animation: pulse 0.8s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="avatar-container">
+    <h2>AI Teacher Avatar</h2>
+
+    <img id="avatar" 
+         class="avatar-img"
+         src="https://api.dicebear.com/7.x/adventurer/svg?seed=Teacher"
+         alt="AI Avatar">
+
+    <br>
+
+    <input type="text" id="nameInput" placeholder="Enter your name">
+
+    <br>
+
+    <button onclick="generateAvatar()">Generate Avatar</button>
+    <button onclick="makeAvatarSpeak()">Speak</button>
+</div>
+
+<script>
+function generateAvatar() {
+    let name = document.getElementById("nameInput").value;
+    if(name.trim() === "") {
+        alert("Please enter a name");
+        return;
+    }
+
+    let url = "https://api.dicebear.com/7.x/adventurer/svg?seed=" + encodeURIComponent(name);
+    document.getElementById("avatar").src = url;
+}
+
+function makeAvatarSpeak() {
+    let avatar = document.getElementById("avatar");
+    avatar.classList.add("speaking");
+
+    let text = "Hello! I am your AI Teacher.";
+    let speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "en-US";
+
+    speech.onend = function() {
+        avatar.classList.remove("speaking");
+    };
+
+    speechSynthesis.speak(speech);
+}
+</script>
+
+</body>
+</html>
