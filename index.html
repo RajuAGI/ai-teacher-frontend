@@ -6,7 +6,27 @@
   <title>AI Teacher - राजू राम</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="pages.css">
+
+  <style>
+    #aiAvatar {
+      width: 150px;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      transition: transform 0.3s ease;
+    }
+
+    .speaking {
+      animation: pulse 0.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+  </style>
 </head>
+
 <body class="home-page">
 
   <div id="nav-placeholder"></div>
@@ -15,20 +35,14 @@
 
     <div class="teacher-box">
 
-  <div class="avatar">
-    <img 
-      id="aiAvatar"
-      src="https://api.dicebear.com/7.x/adventurer/svg?seed=RajuRam"
-      alt="AI Avatar"
-      style="width:150px; border-radius:50%; border:4px solid #fff;"
-    />
-  </div>
+      <div class="avatar">
+        <img id="aiAvatar" src="photo.jpg" alt="Raju Ram" />
+      </div>
 
-  <h1>Raju Ram Bajya</h1>
-  <p class="subtitle">
-    कोई भी सवाल पूछो — मैं समझाऊंगा और बोलूंगा! 🎓
-  </p>
-
+      <h1>Raju Ram Bajya</h1>
+      <p class="subtitle">
+        कोई भी सवाल पूछो — मैं समझाऊंगा और बोलूंगा! 🎓
+      </p>
     </div>
 
     <div class="input-box">
@@ -45,20 +59,12 @@
       <button onclick="stopSpeaking()" id="stopBtn" disabled>⏹ रोको</button>
     </div>
 
-    <div class="search-section">
-      <h3>🔍 Web Search</h3>
-      <div class="search-input-box">
-        <input type="text" id="searchInput" placeholder="कुछ भी search करो..." />
-        <button onclick="doSearch()">Search</button>
-      </div>
-      <div id="searchResults" class="search-results-box" style="display:none"></div>
-    </div>
-
   </div>
 
   <div id="footer-placeholder"></div>
 
   <script src="script.js"></script>
   <script src="nav-footer.js"></script>
+
 </body>
 </html>
