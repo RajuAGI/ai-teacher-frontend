@@ -679,9 +679,9 @@
     async function startQuiz(topic) {
       currentTopic = topic;
       showPage("loadingPage");
-      document.getElementById("loadingTopic").innerText = `"${topic}" के 15 verified सवाल बन रहे हैं...`;
+      document.getElementById("loadingTopic").innerText = `"${topic}" के 15 सवाल बन रहे हैं...`;
 
-      // Loading animation
+      // Loading animation — 120 seconds tak
       let step = 1;
       loadingInterval = setInterval(() => {
         for (let i = 1; i <= 5; i++) {
@@ -693,18 +693,27 @@
         if (step < 5) step++;
       }, 4000);
 
+      // ⏱ 120 second timeout (Render cold start ke liye)
+      const controller = new AbortController();
+      const timeoutId  = setTimeout(() => controller.abort(), 120000);
+
+      // Backend को जगाओ — quiz fetch से पहले ping
+      fetch(`${BACKEND_URL}/`, { signal: AbortSignal.timeout ? AbortSignal.timeout(5000) : undefined }).catch(() => {});
+
       try {
         const response = await fetch(`${BACKEND_URL}/quiz`, {
-          method: "POST",
+          method:  "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ topic })
+          body:    JSON.stringify({ topic }),
+          signal:  controller.signal
         });
+        clearTimeout(timeoutId);
 
         const data = await response.json();
         clearInterval(loadingInterval);
 
         if (data.error || !data.questions || data.questions.length < 5) {
-          showError(data.error || "Quiz generate नहीं हो पाई। फिर से try करो।");
+          showError(data.error || "Quiz generate नहीं हो पाई। फिर से try करो।", topic);
           return;
         }
 
@@ -712,8 +721,13 @@
         initGame();
 
       } catch (err) {
+        clearTimeout(timeoutId);
         clearInterval(loadingInterval);
-        showError("Backend से connect नहीं हो पाया। Internet check करो।");
+        if (err.name === "AbortError") {
+          showError("Backend बहुत slow है। एक बार और try करो — अब जल्दी load होगा! 🚀", topic);
+        } else {
+          showError("Backend से connect नहीं हो पाया। Internet check करो और फिर try करो।", topic);
+        }
       }
     }
 
@@ -1027,14 +1041,24 @@
     }
 
     // ===== ERROR =====
-    function showError(msg) {
+    function showError(msg, retryTopic) {
       showPage("loadingPage");
       document.querySelector(".loading-page").innerHTML = `
         <div class="error-box">
-          <div style="font-size:54px;margin-bottom:16px">😔</div>
-          <h3>Quiz Load नहीं हो पाई</h3>
+          <div style="font-size:54px;margin-bottom:16px">😴</div>
+          <h3>Backend जाग रहा है...</h3>
           <p>${msg}</p>
-          <button class="btn-primary" onclick="goToTopics()" style="margin-top:8px">← वापस जाओ</button>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
+            ${retryTopic ? `<button class="btn-primary" onclick="startQuiz('${retryTopic.replace(/'/g,"\'")}')" style="background:#2ecc71">
+              🔄 फिर Try करो
+            </button>` : ""}
+            <button class="btn-primary" onclick="goToTopics()" style="background:#e94560">
+              ← Topic बदलो
+            </button>
+          </div>
+          <p style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:16px">
+            💡 Tip: पहली बार 60-90 सेकंड लग सकते हैं। "फिर Try करो" दबाओ!
+          </p>
         </div>
       `;
     }
@@ -1053,6 +1077,13 @@
       document.getElementById("newTopicInput").addEventListener("keypress", e => {
         if (e.key === "Enter") addTopic();
       });
+
+      // ✅ Page load hote hi backend ko jaagao (cold start minimize karo)
+      setTimeout(() => {
+        fetch(`${BACKEND_URL}/`, { method: "GET" })
+          .then(() => console.log("✅ Backend awake!"))
+          .catch(() => console.log("⏳ Backend waking up..."));
+      }, 500);
     });
   </script>
 </body>
