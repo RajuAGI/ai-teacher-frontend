@@ -7,118 +7,39 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="pages.css">
   <style>
-    .lb-loading {
-      text-align: center;
-      padding: 40px;
-      font-size: 1.2rem;
-      color: #888;
-    }
+    .lb-loading { text-align:center;padding:40px;font-size:1.1rem;color:rgba(255,255,255,0.5); }
+    .lb-empty { text-align:center;padding:50px 20px;color:rgba(255,255,255,0.5); }
+    .lb-empty .ei { font-size:3rem;margin-bottom:10px; }
+    .total-tag { text-align:center;color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:16px; }
 
-    .lb-empty {
-      text-align: center;
-      padding: 50px 20px;
-      color: #aaa;
-    }
-    .lb-empty .empty-icon { font-size: 3rem; margin-bottom: 10px; }
-    .lb-empty p { font-size: 1rem; margin: 5px 0; }
-
-    .total-players {
-      text-align: center;
-      color: #888;
-      font-size: 0.9rem;
-      margin-bottom: 16px;
-    }
-
-    /* Top 3 cards */
-    .top-three {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      gap: 12px;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-    }
-
+    .top-three { display:flex;justify-content:center;align-items:flex-end;gap:12px;margin-bottom:28px;flex-wrap:wrap; }
     .top-card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 18px 16px;
-      text-align: center;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-      min-width: 110px;
-      max-width: 140px;
-      flex: 1;
-      transition: transform 0.2s;
+      background:white;border-radius:16px;padding:18px 14px;text-align:center;
+      box-shadow:0 4px 16px rgba(0,0,0,0.12);min-width:110px;max-width:140px;flex:1;
+      transition:transform 0.2s;
     }
-    .top-card:hover { transform: translateY(-4px); }
-    .top-card.first  { border-top: 4px solid #f5c518; order: 2; padding-top: 26px; }
-    .top-card.second { border-top: 4px solid #b0b8c1; order: 1; }
-    .top-card.third  { border-top: 4px solid #cd7f32; order: 3; }
+    .top-card:hover { transform:translateY(-4px); }
+    .top-card.first  { border-top:4px solid #f5c518;order:2;padding-top:26px; }
+    .top-card.second { border-top:4px solid #b0b8c1;order:1; }
+    .top-card.third  { border-top:4px solid #cd7f32;order:3; }
+    .top-card .rank      { font-size:2rem;margin-bottom:4px; }
+    .top-card h3         { font-size:0.9rem;margin:0 0 4px;font-weight:700;color:#222;word-break:break-word; }
+    .top-card .sc        { font-size:0.85rem;font-weight:600;color:#555; }
+    .top-card .pct       { font-size:0.75rem;color:#aaa;margin-top:2px; }
+    .top-card .tp        { font-size:0.7rem;color:#bbb;margin-top:4px;word-break:break-word; }
 
-    .top-card .rank       { font-size: 2rem; margin-bottom: 4px; }
-    .top-card .avatar-lb  { font-size: 2.2rem; margin-bottom: 6px; }
-    .top-card h3          { font-size: 0.95rem; margin: 0 0 4px; font-weight: 700; color: #222; word-break: break-word; }
-    .top-card .score-tag  { font-size: 0.85rem; font-weight: 600; color: #555; }
-    .top-card .pct-tag    { font-size: 0.78rem; color: #888; margin-top: 2px; }
-    .top-card .topic-tag  { font-size: 0.72rem; color: #aaa; margin-top: 4px; word-break: break-word; }
+    .leaderboard-table { width:100%;border-collapse:collapse;font-size:0.9rem; }
+    .leaderboard-table thead tr { background:#f0f4ff; }
+    .leaderboard-table th { padding:10px 8px;text-align:left;font-weight:700;color:#444;border-bottom:2px solid #dde3f5; }
+    .leaderboard-table td { padding:10px 8px;border-bottom:1px solid #f0f0f0;color:#333;vertical-align:middle; }
+    .leaderboard-table tr:last-child td { border-bottom:none; }
+    .leaderboard-table tr:hover td { background:#f9f9ff; }
 
-    /* Table */
-    .leaderboard-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.95rem;
-    }
-    .leaderboard-table thead tr {
-      background: #f0f4ff;
-    }
-    .leaderboard-table th {
-      padding: 10px 8px;
-      text-align: left;
-      font-weight: 700;
-      color: #444;
-      border-bottom: 2px solid #dde3f5;
-    }
-    .leaderboard-table td {
-      padding: 10px 8px;
-      border-bottom: 1px solid #f0f0f0;
-      color: #333;
-      vertical-align: middle;
-    }
-    .leaderboard-table tr:last-child td { border-bottom: none; }
-    .leaderboard-table tr:hover td { background: #f9f9ff; }
-
-    .rank-num { font-weight: 700; color: #888; text-align: center; }
-    .rank-num.top { color: #f5c518; }
-
-    .pct-bar-wrap {
-      background: #eee;
-      border-radius: 99px;
-      height: 7px;
-      width: 70px;
-      display: inline-block;
-      vertical-align: middle;
-      margin-left: 6px;
-    }
-    .pct-bar {
-      height: 7px;
-      border-radius: 99px;
-      background: linear-gradient(90deg, #4f8ef7, #6fcf97);
-    }
-
-    .games-badge {
-      font-size: 0.75rem;
-      background: #f0f4ff;
-      color: #4f8ef7;
-      border-radius: 99px;
-      padding: 2px 8px;
-      font-weight: 600;
-    }
-
-    @media (max-width: 480px) {
-      .leaderboard-table th:nth-child(4),
-      .leaderboard-table td:nth-child(4) { display: none; }
-      .pct-bar-wrap { display: none; }
-    }
+    .rk { font-weight:700;color:#aaa;text-align:center; }
+    .rk.top { color:#f5c518; }
+    .pbar-w { background:#eee;border-radius:99px;height:7px;width:60px;display:inline-block;vertical-align:middle;margin-left:5px; }
+    .pbar   { height:7px;border-radius:99px;background:linear-gradient(90deg,#e94560,#6fcf97); }
+    .qbadge { font-size:0.72rem;background:#f0f4ff;color:#e94560;border-radius:99px;padding:2px 8px;font-weight:600; }
   </style>
 </head>
 <body>
@@ -133,36 +54,27 @@
 
     <div class="leaderboard-box">
 
-      <!-- Loading state -->
-      <div id="lb-loading" class="lb-loading">
-        ⏳ Leaderboard load हो रहा है...
-      </div>
+      <div id="lb-loading" class="lb-loading">⏳ Leaderboard load हो रहा है...</div>
 
-      <!-- Empty state (hidden by default) -->
-      <div id="lb-empty" class="lb-empty" style="display:none;">
-        <div class="empty-icon">📭</div>
-        <p><strong>अभी कोई Score नहीं है!</strong></p>
+      <div id="lb-empty" class="lb-empty" style="display:none">
+        <div class="ei">📭</div>
+        <p><strong>अभी कोई Score नहीं!</strong></p>
         <p>Quiz खेलो और यहाँ दिखो 🎯</p>
       </div>
 
-      <!-- Real content (hidden until loaded) -->
-      <div id="lb-content" style="display:none;">
-        <p class="total-players" id="total-players-text"></p>
-
-        <!-- Top 3 -->
+      <div id="lb-content" style="display:none">
+        <p class="total-tag" id="total-tag"></p>
         <div class="top-three" id="top-three"></div>
-
-        <!-- Full Table -->
         <table class="leaderboard-table">
           <thead>
             <tr>
-              <th style="text-align:center;">Rank</th>
+              <th style="text-align:center">Rank</th>
               <th>Student</th>
               <th>Best Score</th>
               <th>Quizzes</th>
             </tr>
           </thead>
-          <tbody id="lb-table-body"></tbody>
+          <tbody id="lb-tbody"></tbody>
         </table>
       </div>
 
@@ -170,101 +82,80 @@
   </div>
 
   <div id="footer-placeholder"></div>
-
   <script src="nav-footer.js"></script>
   <script>
-    const BACKEND = "https://teamcoin-backend.onrender.com";
+    const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
 
-    // Avatar helper based on rank / name
-    function getAvatar(rank) {
-      const avatars = ["🥇","🥈","🥉"];
-      const fallback = ["👦","👧","🧑","👨","👩"];
-      if (rank <= 3) return avatars[rank - 1];
-      return fallback[rank % fallback.length];
-    }
-
-    function getCardEmoji(rank) {
-      if (rank === 1) return "🥇";
-      if (rank === 2) return "🥈";
-      return "🥉";
+    function esc(s) {
+      return String(s)
+        .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
     }
 
     async function loadLeaderboard() {
       try {
-        const res  = await fetch(`${BACKEND}/leaderboard`);
+        const res  = await fetch(`${BACKEND_URL}/leaderboard`);
         const data = await res.json();
 
         document.getElementById("lb-loading").style.display = "none";
 
         const list = data.leaderboard || [];
-
         if (list.length === 0) {
           document.getElementById("lb-empty").style.display = "block";
           return;
         }
 
         document.getElementById("lb-content").style.display = "block";
-        document.getElementById("total-players-text").textContent =
+        document.getElementById("total-tag").textContent =
           `कुल ${data.total_players} Students ने Quiz खेली है`;
 
-        // ---- TOP 3 ----
-        const topThree = list.slice(0, 3);
-        const order    = [1, 0, 2]; // display order: 2nd, 1st, 3rd
-        const classes  = ["second", "first", "third"];
-        const topDiv   = document.getElementById("top-three");
+        // TOP 3
+        const top3    = list.slice(0, 3);
+        const order   = [1, 0, 2];
+        const classes = ["second", "first", "third"];
+        const medals  = ["🥇", "🥈", "🥉"];
+        const topDiv  = document.getElementById("top-three");
 
         order.forEach((idx, pos) => {
-          if (!topThree[idx]) return;
-          const p = topThree[idx];
+          if (!top3[idx]) return;
+          const p    = top3[idx];
           const card = document.createElement("div");
           card.className = `top-card ${classes[pos]}`;
           card.innerHTML = `
-            <div class="rank">${getCardEmoji(idx + 1)}</div>
-            <div class="avatar-lb">👤</div>
-            <h3>${escHtml(p.name)}</h3>
-            <div class="score-tag">${p.best_score}/${p.best_total}</div>
-            <div class="pct-tag">${p.percentage}%</div>
-            <div class="topic-tag">${escHtml(p.best_topic || "")}</div>
+            <div class="rank">${medals[idx]}</div>
+            <h3>${esc(p.name)}</h3>
+            <div class="sc">${p.best_score}/${p.best_total}</div>
+            <div class="pct">${p.percentage}%</div>
+            <div class="tp">${esc(p.best_topic || "")}</div>
           `;
           topDiv.appendChild(card);
         });
 
-        // ---- TABLE ----
-        const tbody = document.getElementById("lb-table-body");
+        // TABLE
+        const tbody = document.getElementById("lb-tbody");
         list.forEach((p, i) => {
           const rank = i + 1;
           const tr   = document.createElement("tr");
           tr.innerHTML = `
-            <td class="rank-num ${rank <= 3 ? 'top' : ''}">${rank}</td>
+            <td class="rk ${rank <= 3 ? 'top' : ''}">${rank}</td>
             <td>
-              <strong>${escHtml(p.name)}</strong>
-              <div style="font-size:0.75rem;color:#aaa;">${escHtml(p.best_topic || "")}</div>
+              <strong>${esc(p.name)}</strong>
+              <div style="font-size:0.72rem;color:#aaa;">${esc(p.best_topic || "")}</div>
             </td>
             <td>
               ${p.best_score}/${p.best_total}
-              <span class="pct-bar-wrap">
-                <span class="pct-bar" style="width:${p.percentage}%"></span>
-              </span>
-              <span style="font-size:0.78rem;color:#888;margin-left:4px;">${p.percentage}%</span>
+              <span class="pbar-w"><span class="pbar" style="width:${p.percentage}%"></span></span>
+              <span style="font-size:0.75rem;color:#888;margin-left:4px">${p.percentage}%</span>
             </td>
-            <td><span class="games-badge">${p.games_played} Quiz</span></td>
+            <td><span class="qbadge">${p.games_played} Quiz</span></td>
           `;
           tbody.appendChild(tr);
         });
 
       } catch (err) {
-        console.error("Leaderboard error:", err);
         document.getElementById("lb-loading").innerHTML =
           "❌ Leaderboard load नहीं हो पाया। दोबारा try करो।";
       }
-    }
-
-    function escHtml(str) {
-      return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
     }
 
     loadLeaderboard();

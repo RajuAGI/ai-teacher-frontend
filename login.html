@@ -20,7 +20,7 @@
           <h2>वापस आओ! 🙏</h2>
           <p>Login करो और पढ़ाई शुरू करो</p>
         </div>
-        <input type="email" id="loginEmail" placeholder="📧 Email" />
+        <input type="email"    id="loginEmail"    placeholder="📧 Email" />
         <input type="password" id="loginPassword" placeholder="🔒 Password" />
         <button onclick="login()">Login करें</button>
         <p id="loginStatus" style="font-size:13px;text-align:center;min-height:18px"></p>
@@ -33,8 +33,8 @@
           <h2>स्वागत है! 🎉</h2>
           <p>Account बनाओ और सीखना शुरू करो</p>
         </div>
-        <input type="text" id="signupName" placeholder="👤 आपका नाम" />
-        <input type="email" id="signupEmail" placeholder="📧 Email" />
+        <input type="text"     id="signupName"     placeholder="👤 आपका नाम" />
+        <input type="email"    id="signupEmail"    placeholder="📧 Email" />
         <input type="password" id="signupPassword" placeholder="🔒 Password" />
         <button onclick="signup()">Register करें</button>
         <p id="signupStatus" style="font-size:13px;text-align:center;min-height:18px"></p>
@@ -48,47 +48,62 @@
 
   <script src="nav-footer.js"></script>
   <script>
+    // Page load पर check करो — already logged in?
+    if (localStorage.getItem("at_username")) {
+      // Already logged in, redirect
+      window.location.href = "index.html";
+    }
+
     function showSignup() {
-      document.getElementById("loginBox").style.display = "none";
-      document.getElementById("signupBox").style.display = "block";
+      document.getElementById("loginBox").style.display   = "none";
+      document.getElementById("signupBox").style.display  = "block";
     }
 
     function showLogin() {
-      document.getElementById("signupBox").style.display = "none";
-      document.getElementById("loginBox").style.display = "block";
+      document.getElementById("signupBox").style.display  = "none";
+      document.getElementById("loginBox").style.display   = "block";
     }
 
     function login() {
-      const email = document.getElementById("loginEmail").value.trim();
+      const email    = document.getElementById("loginEmail").value.trim();
       const password = document.getElementById("loginPassword").value;
-      const status = document.getElementById("loginStatus");
+      const status   = document.getElementById("loginStatus");
 
       if (!email || !password) {
         status.style.color = "#e94560";
-        status.innerText = "❌ कृपया सभी fields भरें!";
+        status.innerText   = "❌ कृपया सभी fields भरें!";
         return;
       }
 
+      // ✅ Email से name निकालो (@ से पहले का हिस्सा)
+      const nameFromEmail = email.split("@")[0];
+      localStorage.setItem("at_username", nameFromEmail);
+      localStorage.setItem("at_email",    email);
+
       status.style.color = "#2ecc71";
-      status.innerText = "✅ Login हो गया! स्वागत है!";
+      status.innerText   = "✅ Login हो गया! स्वागत है!";
       setTimeout(() => window.location.href = "index.html", 1500);
     }
 
     function signup() {
-      const name = document.getElementById("signupName").value.trim();
-      const email = document.getElementById("signupEmail").value.trim();
+      const name     = document.getElementById("signupName").value.trim();
+      const email    = document.getElementById("signupEmail").value.trim();
       const password = document.getElementById("signupPassword").value;
-      const status = document.getElementById("signupStatus");
+      const status   = document.getElementById("signupStatus");
 
       if (!name || !email || !password) {
         status.style.color = "#e94560";
-        status.innerText = "❌ कृपया सभी fields भरें!";
+        status.innerText   = "❌ कृपया सभी fields भरें!";
         return;
       }
 
+      // ✅ Name localStorage में save करो
+      localStorage.setItem("at_username", name);
+      localStorage.setItem("at_email",    email);
+
       status.style.color = "#2ecc71";
-      status.innerText = "✅ Account बन गया! Login करो!";
-      setTimeout(() => showLogin(), 1500);
+      status.innerText   = "✅ Account बन गया! स्वागत है!";
+      setTimeout(() => window.location.href = "index.html", 1500);
     }
   </script>
 </body>
