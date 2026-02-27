@@ -1,4 +1,4 @@
-const BACKEND_URL = "https://ai-teacher-backend-ngbs.onrender.com";
+const BACKEND_URL = "https://ai-teacher-backend-uc85.onrender.com";
 
 let currentAnswer = "";
 let currentAudioObj = null;
